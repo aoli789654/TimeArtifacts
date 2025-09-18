@@ -1,0 +1,21 @@
+{
+    "name": "time-artifacts-backend",
+    "version": "1.0.0",
+    "description": "时光信物游戏后端依赖包配置",
+    "dependencies": [
+        {
+            "name": "nlohmann-json",
+            "version>=": "3.11.0"
+        },
+        {
+            "name": "websocketpp",
+            "version>=": "0.8.2"
+        },
+        {
+            "name": "sfml",
+            "features": ["audio"],
+            "version>=": "2.5.1"
+        }
+    ],
+    "builtin-baseline": "2024-01-01"
+}

@@ -1,0 +1,123 @@
+{
+    "locations": {
+        "bookstore": {
+            "id": "bookstore",
+            "name": "时光角落书店",
+            "descriptions": {
+                "default": "这是一家温馨的旧书店，书架上摆满了各个年代的书籍。阳光透过窗户洒在木制地板上，空气中弥漫着纸张的香味。一位慈祥的老人坐在柜台后面，正在翻阅一本古老的书籍。",
+                "evening": "夜幕降临，书店内亮起了暖黄色的灯光。在这样的氛围中，整个空间显得更加宁静而神秘。老板点燃了一支蜡烛，烛光在书架间摇曳。",
+                "rainy": "雨点轻敲着书店的窗户，店内显得格外安静。你能听到远处传来的雨声，为这个空间增添了一丝诗意。老板为你递上一杯热茶。"
+            },
+            "exits": {
+                "north": "old_street",
+                "east": "small_courtyard"
+            },
+            "items": ["old_diary", "bookstore_key"],
+            "characters": ["bookstore_owner"],
+            "interactions": [
+                {
+                    "id": "examine_bookshelf",
+                    "name": "检查书架",
+                    "description": "仔细查看书架上的书籍",
+                    "requirements": {
+                        "attribute": "observation",
+                        "threshold": 2
+                    },
+                    "results": {
+                        "text": "在书架的角落，你发现了一本看起来很特别的日记...",
+                        "items": ["hidden_diary"],
+                        "insights": ["bookstore_secret"],
+                        "attributeGain": {
+                            "observation": 1
+                        }
+                    }
+                },
+                {
+                    "id": "talk_to_owner",
+                    "name": "与店主交谈",
+                    "description": "和慈祥的书店老板聊天",
+                    "requirements": {},
+                    "results": {
+                        "dialogue": "bookstore_owner_greeting"
+                    }
+                },
+                {
+                    "id": "look_around",
+                    "name": "环顾四周",
+                    "description": "仔细观察书店的环境",
+                    "requirements": {},
+                    "results": {
+                        "text": "你注意到书店里有很多有趣的细节：古老的木质书架、发黄的书页、墙上挂着的老照片..."
+                    }
+                }
+            ]
+        },
+        
+        "old_street": {
+            "id": "old_street",
+            "name": "古老街道",
+            "descriptions": {
+                "default": "这是一条铺着青石板的古老街道。两旁是风格各异的老建筑，有些已经斑驳不堪，但依然透着历史的韵味。偶尔有几个行人匆匆走过。",
+                "evening": "街灯一盏盏亮起，在青石板上投下温暖的光影。古老的建筑在夜色中显得更加神秘，仿佛每一块砖瓦都藏着故事。",
+                "rainy": "雨水冲刷着青石板，反射出街灯的光芒。雨中的古街别有一番韵味，空气中弥漫着湿润的石头香味。"
+            },
+            "exits": {
+                "south": "bookstore",
+                "north": "harbor",
+                "west": "library"
+            },
+            "items": ["street_lamp_note"],
+            "characters": ["old_musician"],
+            "interactions": [
+                {
+                    "id": "examine_street_lamp",
+                    "name": "查看路灯",
+                    "description": "检查古老的街灯",
+                    "requirements": {},
+                    "results": {
+                        "text": "这盏路灯很有年代感，灯柱上似乎贴着什么东西..."
+                    }
+                },
+                {
+                    "id": "walk_north",
+                    "name": "向北走",
+                    "description": "沿着街道向北走向港口",
+                    "requirements": {},
+                    "results": {
+                        "locationChange": "harbor"
+                    }
+                }
+            ]
+        },
+        
+        "harbor": {
+            "id": "harbor",
+            "name": "旧港码头",
+            "descriptions": {
+                "default": "这是一个已经废弃的小码头，木制的栈桥延伸向海中。海风带着咸腥味，远处传来轮船的汽笛声。几只海鸥在栈桥上休息。",
+                "evening": "夕阳西下，海面泛着金光。废弃的码头在夕阳中显得格外凄美，仿佛在诉说着昔日的繁华。",
+                "rainy": "雨点击打着海面，掀起层层波纹。码头在雨中显得更加萧瑟，但也有一种独特的诗意美感。"
+            },
+            "exits": {
+                "south": "old_street"
+            },
+            "items": ["ship_bell", "old_rope"],
+            "characters": ["old_sailor"],
+            "interactions": [
+                {
+                    "id": "examine_pier",
+                    "name": "检查栈桥",
+                    "description": "仔细查看木制栈桥",
+                    "requirements": {
+                        "attribute": "observation",
+                        "threshold": 3
+                    },
+                    "results": {
+                        "text": "栈桥的木板已经腐朽，但你发现其中一块板子下面似乎藏着什么...",
+                        "items": ["hidden_letter"]
+                    }
+                }
+            ]
+        }
+    }
+}
