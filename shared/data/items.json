@@ -1,0 +1,126 @@
+{
+    "items": {
+        "old_diary": {
+            "id": "old_diary",
+            "name": "泛黄的日记",
+            "type": "clue",
+            "description": "一本泛黄的日记本，封面已经有些破损。翻开第一页，你看到了娟秀的字迹：'如果有人读到这本日记，请帮我找到那些失落的记忆...'",
+            "canUse": true,
+            "useDescription": "你仔细阅读日记的内容，逐渐了解了一个关于爱情与遗忘的故事...",
+            "useResults": {
+                "insights": ["love_story_clue"],
+                "attributeGain": {
+                    "empathy": 2
+                }
+            }
+        },
+        
+        "bookstore_key": {
+            "id": "bookstore_key",
+            "name": "书店钥匙",
+            "type": "story",
+            "description": "一把古朴的铜制钥匙，上面刻着精美的花纹。书店老板说这把钥匙可以打开一些特殊的地方。",
+            "canUse": true,
+            "useDescription": "这把钥匙在你手中散发着温暖的光芒...",
+            "useResults": {
+                "unlocks": ["secret_room"]
+            }
+        },
+        
+        "hidden_diary": {
+            "id": "hidden_diary",
+            "name": "隐藏的日记",
+            "type": "memento",
+            "description": "这是你在书架后面发现的一本日记。它的封面上写着'林夏的秘密'。这似乎是一件重要的时光信物。",
+            "canUse": true,
+            "useDescription": "翻开日记，你看到了关于这座城市过去的重要线索...",
+            "useResults": {
+                "insights": ["city_history", "lin_xia_secret"],
+                "attributeGain": {
+                    "observation": 2,
+                    "empathy": 1
+                }
+            },
+            "isMemento": true,
+            "mementoValue": 100
+        },
+        
+        "street_lamp_note": {
+            "id": "street_lamp_note",
+            "name": "路灯下的纸条",
+            "type": "clue",
+            "description": "贴在街灯上的一张小纸条，上面写着：'每个周三的黄昏，我都会在这里等她。如果你看到一个穿蓝裙子的女孩，请告诉她，我还在等她。'",
+            "canUse": false,
+            "useDescription": "",
+            "useResults": {
+                "insights": ["waiting_love"]
+            }
+        },
+        
+        "ship_bell": {
+            "id": "ship_bell",
+            "name": "船铃",
+            "type": "memento",
+            "description": "一个古老的船铃，虽然已经生锈，但依然能发出清脆的声响。铃上刻着'希望号'的字样。这可能是一件重要的时光信物。",
+            "canUse": true,
+            "useDescription": "你轻轻摇响船铃，仿佛听到了远古的海风和船员的呼喊声...",
+            "useResults": {
+                "insights": ["hope_ship_story"],
+                "attributeGain": {
+                    "empathy": 2
+                }
+            },
+            "isMemento": true,
+            "mementoValue": 150
+        },
+        
+        "old_rope": {
+            "id": "old_rope",
+            "name": "旧船绳",
+            "type": "story",
+            "description": "一段磨损严重的船绳，虽然已经不能使用，但上面的结绳方式很特别，似乎蕴含着某种信息。",
+            "canUse": true,
+            "useDescription": "你仔细研究绳结的打法，发现这是一种特殊的密码...",
+            "useResults": {
+                "insights": ["rope_code"],
+                "attributeGain": {
+                    "observation": 1
+                }
+            }
+        },
+        
+        "hidden_letter": {
+            "id": "hidden_letter",
+            "name": "藏匿的信件",
+            "type": "clue",
+            "description": "一封被精心藏在栈桥下的信件，信封上写着'给未来的你'。信纸已经有些潮湿，但字迹依然清晰。",
+            "canUse": true,
+            "useDescription": "你小心地打开信件，里面的内容让你深深震撼...",
+            "useResults": {
+                "insights": ["future_message", "true_identity"],
+                "attributeGain": {
+                    "empathy": 3,
+                    "observation": 1
+                }
+            }
+        }
+    },
+    
+    "itemTypes": {
+        "memento": {
+            "name": "时光信物",
+            "description": "承载着重要记忆的特殊物品",
+            "color": "#d4af37"
+        },
+        "clue": {
+            "name": "线索物品",
+            "description": "帮助解开谜题的重要线索",
+            "color": "#4caf50"
+        },
+        "story": {
+            "name": "故事物品",
+            "description": "推动剧情发展的关键物品",
+            "color": "#2196f3"
+        }
+    }
+}

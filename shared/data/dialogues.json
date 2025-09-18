@@ -1,0 +1,159 @@
+{
+    "dialogues": {
+        "bookstore_owner_greeting": {
+            "id": "bookstore_owner_greeting",
+            "speaker": "书店老板",
+            "text": "欢迎来到时光角落，年轻人。你看起来像是在寻找什么特别的东西。这里的每一本书都有它的故事，就像这座城市的每一个角落都藏着秘密一样。",
+            "options": [
+                {
+                    "id": "ask_about_memories",
+                    "text": "我在寻找一些旧物件，关于这个城市过去的记忆。",
+                    "requirements": {},
+                    "results": {
+                        "dialogue": "bookstore_owner_memories",
+                        "attributeGain": {
+                            "communication": 1
+                        }
+                    }
+                },
+                {
+                    "id": "observe_sadness",
+                    "text": "[观察] 注意到他眼中的忧伤。",
+                    "requirements": {
+                        "attribute": "observation",
+                        "threshold": 3
+                    },
+                    "results": {
+                        "dialogue": "bookstore_owner_sadness",
+                        "insights": ["owner_sadness"],
+                        "attributeGain": {
+                            "empathy": 2
+                        }
+                    }
+                },
+                {
+                    "id": "casual_browse",
+                    "text": "我只是随便看看，这里的书很有意思。",
+                    "requirements": {},
+                    "results": {
+                        "dialogue": "bookstore_owner_casual"
+                    }
+                }
+            ]
+        },
+        
+        "bookstore_owner_memories": {
+            "id": "bookstore_owner_memories",
+            "speaker": "书店老板",
+            "text": "啊，寻找记忆的人...这样的人我见过不少。这座城市确实有很多被遗忘的故事。你知道吗，有些记忆就藏在最不起眼的地方，比如一张老照片，一把钥匙，或者一本泛黄的日记。",
+            "options": [
+                {
+                    "id": "ask_about_diary",
+                    "text": "您提到的日记是指什么？",
+                    "requirements": {},
+                    "results": {
+                        "dialogue": "bookstore_owner_diary",
+                        "attributeGain": {
+                            "observation": 1
+                        }
+                    }
+                },
+                {
+                    "id": "ask_for_help",
+                    "text": "您能帮助我寻找这些记忆吗？",
+                    "requirements": {
+                        "attribute": "communication",
+                        "threshold": 2
+                    },
+                    "results": {
+                        "dialogue": "bookstore_owner_help",
+                        "items": ["bookstore_key"],
+                        "insights": ["owner_trust"]
+                    }
+                }
+            ]
+        },
+        
+        "bookstore_owner_sadness": {
+            "id": "bookstore_owner_sadness",
+            "speaker": "书店老板",
+            "text": "你观察得很仔细，年轻人。是的，我确实有些忧伤。这家书店曾经是我和我妻子共同经营的。她去世后，我一个人守着这些书，守着我们的回忆。有时候我想，也许书籍是最好的时光信物，它们能保存住那些美好的瞬间。",
+            "options": [
+                {
+                    "id": "offer_comfort",
+                    "text": "[共情] 轻声说：'她一定很爱这家书店，就像爱您一样。'",
+                    "requirements": {
+                        "attribute": "empathy",
+                        "threshold": 2
+                    },
+                    "results": {
+                        "dialogue": "bookstore_owner_touched",
+                        "attributeGain": {
+                            "empathy": 3
+                        },
+                        "insights": ["deep_love_story"],
+                        "items": ["wife_photo"]
+                    }
+                },
+                {
+                    "id": "ask_about_wife",
+                    "text": "能跟我说说您妻子的故事吗？",
+                    "requirements": {},
+                    "results": {
+                        "dialogue": "bookstore_owner_wife_story"
+                    }
+                }
+            ]
+        },
+        
+        "bookstore_owner_casual": {
+            "id": "bookstore_owner_casual",
+            "speaker": "书店老板",
+            "text": "当然，请随意浏览。这里的书都有些年头了，但每一本都被精心保管着。如果有什么问题，尽管问我。对了，如果你对这座城市的历史感兴趣，我推荐你看看那边角落里的本地史志。",
+            "options": [
+                {
+                    "id": "thank_and_browse",
+                    "text": "谢谢您的建议，我去看看。",
+                    "requirements": {},
+                    "results": {
+                        "text": "你向书店老板点头致谢，然后转身去浏览书籍。",
+                        "endDialogue": true
+                    }
+                }
+            ]
+        },
+        
+        "bookstore_owner_diary": {
+            "id": "bookstore_owner_diary",
+            "speaker": "书店老板",
+            "text": "我这里确实有一本特别的日记，是一个叫林夏的女孩留下的。她说要去寻找这座城市失落的记忆，把日记寄存在我这里。那已经是很多年前的事了...如果你真的在寻找记忆，也许这本日记能给你一些启发。",
+            "options": [
+                {
+                    "id": "request_diary",
+                    "text": "我能看看那本日记吗？",
+                    "requirements": {},
+                    "results": {
+                        "text": "书店老板从书架后面取出一本泛黄的日记，小心地递给你。",
+                        "items": ["old_diary"],
+                        "endDialogue": true
+                    }
+                }
+            ]
+        }
+    },
+    
+    "characterProfiles": {
+        "bookstore_owner": {
+            "name": "书店老板",
+            "fullName": "陈志远",
+            "age": 68,
+            "description": "一位慈祥的老人，经营着这家旧书店已经四十多年。他知道这座城市的很多秘密，是一个值得信任的向导。",
+            "personality": ["慈祥", "博学", "略带忧郁", "乐于助人"],
+            "background": "年轻时与妻子一起开了这家书店，妻子去世后独自守护着这里。他相信书籍能够保存记忆，是时光信物的守护者之一。",
+            "relationships": {
+                "wife": "深爱的已故妻子，书店的共同创始人",
+                "lin_xia": "多年前的顾客，留下了重要的日记"
+            }
+        }
+    }
+}

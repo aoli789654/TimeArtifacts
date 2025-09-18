@@ -1,0 +1,34 @@
+{
+  "name": "time-artifacts-frontend",
+  "version": "1.0.0",
+  "description": "时光信物游戏前端界面",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "python -m http.server 3000",
+    "start": "npm run serve"
+  },
+  "keywords": [
+    "game",
+    "text-adventure", 
+    "websocket",
+    "frontend"
+  ],
+  "author": "时光信物开发团队",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "dependencies": {
+    "particles.js": "^2.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

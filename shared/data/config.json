@@ -1,0 +1,31 @@
+{
+    "gameInfo": {
+        "title": "时光信物",
+        "version": "1.0.0",
+        "description": "一个关于记忆与遗忘的文本冒险游戏"
+    },
+    
+    "server": {
+        "port": 8080,
+        "host": "localhost",
+        "maxConnections": 10
+    },
+    
+    "gameSettings": {
+        "startingLocation": "bookstore",
+        "startingAttributes": {
+            "observation": 1,
+            "communication": 1,
+            "action": 1,
+            "empathy": 1
+        },
+        "maxAttributeValue": 10,
+        "startingInventorySize": 10
+    },
+    
+    "debug": {
+        "logLevel": "info",
+        "enableDetailedLogging": false,
+        "showDebugCommands": false
+    }
+}
