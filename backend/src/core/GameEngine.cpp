@@ -5,54 +5,55 @@
  */
 
 #include "core/GameEngine.h"
+#include "WebSocketServer.h"  // 引入我们新创建的WebSocket服务器
 #include <iostream>
 #include <thread>
 #include <chrono>
 
 GameEngine::GameEngine() {
-    std::cout << "[GameEngine] 创建游戏引擎实例" << std::endl;
+    std::cout << "[GameEngine] Creating game engine instance" << std::endl;
 }
 
 GameEngine::~GameEngine() {
     if (running.load()) {
         shutdown();
     }
-    std::cout << "[GameEngine] 游戏引擎实例已销毁" << std::endl;
+    std::cout << "[GameEngine] Game engine instance destroyed" << std::endl;
 }
 
 bool GameEngine::initialize() {
     if (initialized.load()) {
-        std::cout << "[GameEngine] 警告: 游戏引擎已经初始化过了" << std::endl;
+        std::cout << "[GameEngine] WARNING: Game engine already initialized" << std::endl;
         return true;
     }
     
-    std::cout << "[GameEngine] 开始初始化游戏引擎..." << std::endl;
+    std::cout << "[GameEngine] Starting game engine initialization..." << std::endl;
     
     try {
         // 初始化各个子系统
         if (!initializeSubsystems()) {
-            std::cerr << "[GameEngine] 子系统初始化失败" << std::endl;
+            std::cerr << "[GameEngine] Subsystem initialization failed" << std::endl;
             return false;
         }
         
         initialized.store(true);
-        std::cout << "[GameEngine] 游戏引擎初始化完成" << std::endl;
+        std::cout << "[GameEngine] Game engine initialization completed" << std::endl;
         return true;
         
     } catch (const std::exception& e) {
-        std::cerr << "[GameEngine] 初始化时发生异常: " << e.what() << std::endl;
+        std::cerr << "[GameEngine] Exception during initialization: " << e.what() << std::endl;
         return false;
     }
 }
 
 void GameEngine::run() {
     if (!initialized.load()) {
-        std::cerr << "[GameEngine] 错误: 游戏引擎未初始化" << std::endl;
+        std::cerr << "[GameEngine] ERROR: Game engine not initialized" << std::endl;
         return;
     }
     
     running.store(true);
-    std::cout << "[GameEngine] 启动游戏主循环" << std::endl;
+    std::cout << "[GameEngine] Starting main game loop" << std::endl;
     
     // 游戏主循环
     const auto targetFrameTime = std::chrono::milliseconds(16); // ~60 FPS
@@ -65,7 +66,7 @@ void GameEngine::run() {
             update();
             
         } catch (const std::exception& e) {
-            std::cerr << "[GameEngine] 游戏循环中发生异常: " << e.what() << std::endl;
+            std::cerr << "[GameEngine] Exception in game loop: " << e.what() << std::endl;
             // 继续运行，不因单次异常而崩溃
         }
         
@@ -78,16 +79,16 @@ void GameEngine::run() {
         }
     }
     
-    std::cout << "[GameEngine] 游戏主循环已退出" << std::endl;
+    std::cout << "[GameEngine] Main game loop exited" << std::endl;
 }
 
 void GameEngine::requestShutdown() {
-    std::cout << "[GameEngine] 收到关闭请求" << std::endl;
+    std::cout << "[GameEngine] Shutdown request received" << std::endl;
     running.store(false);
 }
 
 void GameEngine::shutdown() {
-    std::cout << "[GameEngine] 开始关闭游戏引擎..." << std::endl;
+    std::cout << "[GameEngine] Starting game engine shutdown..." << std::endl;
     
     // 停止主循环
     running.store(false);
@@ -96,21 +97,37 @@ void GameEngine::shutdown() {
     cleanupSubsystems();
     
     initialized.store(false);
-    std::cout << "[GameEngine] 游戏引擎已关闭" << std::endl;
+    std::cout << "[GameEngine] Game engine shutdown complete" << std::endl;
 }
 
 bool GameEngine::initializeSubsystems() {
-    std::cout << "[GameEngine] 初始化子系统..." << std::endl;
+    std::cout << "[GameEngine] Initializing subsystems..." << std::endl;
     
-    // TODO: 后端架构师在这里初始化各个子系统
-    // 示例：
-    // 1. 创建事件管理器
-    // 2. 创建状态管理器  
-    // 3. 创建WebSocket服务器
-    // 4. 创建数据加载器
-    
-    std::cout << "[GameEngine] 所有子系统初始化完成" << std::endl;
-    return true;
+    try {
+        // 1. 创建WebSocket服务器
+        std::cout << "[GameEngine] Creating WebSocket server..." << std::endl;
+        webSocketServer = std::make_unique<WebSocketServer>();
+        
+        // 2. 启动WebSocket服务器
+        if (!webSocketServer->start(8080)) {
+            std::cerr << "[GameEngine] WebSocket server startup failed" << std::endl;
+            return false;
+        }
+        
+        std::cout << "[GameEngine] WebSocket server started successfully, listening on port 8080" << std::endl;
+        
+        // TODO: 后端架构师继续添加其他子系统
+        // 3. 创建事件管理器
+        // 4. 创建状态管理器  
+        // 5. 创建数据加载器
+        
+        std::cout << "[GameEngine] All subsystems initialized successfully" << std::endl;
+        return true;
+        
+    } catch (const std::exception& e) {
+        std::cerr << "[GameEngine] Exception during subsystem initialization: " << e.what() << std::endl;
+        return false;
+    }
 }
 
 void GameEngine::update() {
@@ -126,10 +143,22 @@ void GameEngine::update() {
 }
 
 void GameEngine::cleanupSubsystems() {
-    std::cout << "[GameEngine] 清理子系统..." << std::endl;
+    std::cout << "[GameEngine] Cleaning up subsystems..." << std::endl;
     
-    // TODO: 后端架构师在这里清理各个子系统
     // 按照初始化的逆序进行清理
     
-    std::cout << "[GameEngine] 子系统清理完成" << std::endl;
+    // 1. 停止WebSocket服务器
+    if (webSocketServer) {
+        std::cout << "[GameEngine] Stopping WebSocket server..." << std::endl;
+        webSocketServer->stop();
+        webSocketServer.reset();  // 释放内存
+        std::cout << "[GameEngine] WebSocket server stopped" << std::endl;
+    }
+    
+    // TODO: 后端架构师继续清理其他子系统
+    // 2. 清理数据加载器
+    // 3. 清理状态管理器
+    // 4. 清理事件管理器
+    
+    std::cout << "[GameEngine] Subsystem cleanup complete" << std::endl;
 }

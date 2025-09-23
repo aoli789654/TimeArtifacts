@@ -17,10 +17,11 @@
 #include <atomic>
 
 // 前向声明
-class StateManager;
-class EventManager;
 class WebSocketServer;
-class DataLoader;
+// 以下类将在后续阶段实现
+// class StateManager;
+// class EventManager;
+// class DataLoader;
 
 /**
  * 游戏引擎主类
@@ -69,10 +70,12 @@ public:
 
 private:
     // 子系统管理器
-    std::unique_ptr<StateManager> stateManager;
-    std::unique_ptr<EventManager> eventManager;
     std::unique_ptr<WebSocketServer> webSocketServer;
-    std::unique_ptr<DataLoader> dataLoader;
+    
+    // 以下子系统将在后续阶段实现
+    // std::unique_ptr<StateManager> stateManager;
+    // std::unique_ptr<EventManager> eventManager;
+    // std::unique_ptr<DataLoader> dataLoader;
     
     // 游戏状态
     std::atomic<bool> running{false};

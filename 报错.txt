@@ -1,0 +1,24 @@
+=== Time Artifacts Game Server ===
+Version: 1.0.0
+Starting up...
+[GameEngine] Creating game engine instance
+[GameEngine] Starting game engine initialization...
+[GameEngine] Initializing subsystems...
+[GameEngine] Creating WebSocket server...
+[WebSocket] Creating WebSocket server (simplified version)
+[WebSocket] Starting WebSocket server (simulation mode), port: 8080
+[WebSocket] WebSocket server started successfully (simulation mode)![WebSocket] Server simulation loop started, port: 8080
+
+[WebSocket] NOTE: This is a simplified version for learning and testing
+[WebSocket] Real WebSocket functionality will be implemented later
+[GameEngine] WebSocket server started successfully, listening on port 8080
+[GameEngine] All subsystems initialized successfully
+[GameEngine] Game engine initialization completed
+Game engine initialized successfully
+WebSocket server started, waiting for client connections...
+Press Ctrl+C to exit
+[GameEngine] Starting main game loop
+[WebSocket] [SIMULATION] New client connection #1
+[WebSocket] [SIMULATION] Sending welcome message to client #1
+
+
