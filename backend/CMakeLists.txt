@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
-project(TimeArtifacts VERSION 1.0.0)
+
+# 设置项目语言（明确指定只使用C++）
+project(TimeArtifacts VERSION 1.0.0 LANGUAGES CXX)
 
 # 设置C++标准
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # 设置构建类型（如果未指定）
 if(NOT CMAKE_BUILD_TYPE)
@@ -18,8 +21,21 @@ else()
 endif()
 
 # 查找依赖包
-find_package(nlohmann_json CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG QUIET)
 find_package(Threads REQUIRED)
+
+# 如果找不到nlohmann_json，尝试使用系统路径
+if(NOT nlohmann_json_FOUND)
+    message(STATUS "nlohmann_json not found via CONFIG, trying to find manually...")
+    find_path(NLOHMANN_JSON_INCLUDE_DIR nlohmann/json.hpp)
+    if(NLOHMANN_JSON_INCLUDE_DIR)
+        add_library(nlohmann_json::nlohmann_json INTERFACE IMPORTED)
+        target_include_directories(nlohmann_json::nlohmann_json INTERFACE ${NLOHMANN_JSON_INCLUDE_DIR})
+        message(STATUS "Found nlohmann_json at: ${NLOHMANN_JSON_INCLUDE_DIR}")
+    else()
+        message(WARNING "nlohmann_json not found! Using fallback JSON handling.")
+    endif()
+endif()
 
 # websocketpp是header-only库，直接包含头文件即可
 # SFML音频库（音频工程师负责集成）
@@ -47,10 +63,18 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 # 链接库
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE 
-    nlohmann_json::nlohmann_json
     Threads::Threads
-    # sfml-audio  # 音频工程师添加
 )
+
+# 如果找到了nlohmann_json，则链接它
+if(TARGET nlohmann_json::nlohmann_json)
+    target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
+    message(STATUS "Linking with nlohmann_json")
+else()
+    message(STATUS "Building without nlohmann_json - using fallback")
+endif()
+
+# sfml-audio  # 音频工程师添加
 
 # 设置输出目录
 set_target_properties(${PROJECT_NAME} PROPERTIES
