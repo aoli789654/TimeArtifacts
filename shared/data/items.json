@@ -1,0 +1,53 @@
+{
+  "items": {
+    "old_diary": {
+      "name": "泛黄的日记",
+      "type": "clue",
+      "description": "一本泛黄的日记，封面已经有些破损，但里面的文字依然清晰可见。",
+      "examinable": true,
+      "examine_results": {
+        "text": "日记记录了某位旅人在这座城市的见闻，提到了一些神秘的'时光信物'。",
+        "insights": ["diary_content"],
+        "attributes": {
+          "observation": 1
+        }
+      }
+    },
+    "mysterious_key": {
+      "name": "神秘钥匙",
+      "type": "memento",
+      "description": "一把造型独特的钥匙，材质看起来很古老，上面刻着精美的花纹。",
+      "examinable": true,
+      "examine_results": {
+        "text": "钥匙上的花纹似乎诉说着什么故事，你感觉它一定能打开某个重要的地方。",
+        "insights": ["mysterious_key_purpose"]
+      }
+    },
+    "dusty_photo": {
+      "name": "老照片",
+      "type": "story",
+      "description": "一张蒙了灰尘的老照片，显示着这座城市过去的模样。",
+      "examinable": true,
+      "examine_results": {
+        "text": "照片中的城市看起来比现在更加繁华，街道上人来人往，充满生机。",
+        "insights": ["city_golden_age"],
+        "attributes": {
+          "empathy": 1
+        }
+      }
+    },
+    "hidden_diary": {
+      "name": "隐藏的日记",
+      "type": "memento",
+      "description": "藏在书架后面的日记，看起来记录了一些重要的秘密。",
+      "examinable": true,
+      "examine_results": {
+        "text": "这本日记详细记录了时光信物的线索，以及如何寻找它们的方法。",
+        "insights": ["time_artifacts_location", "search_method"],
+        "attributes": {
+          "observation": 2
+        }
+      }
+    }
+  }
+}

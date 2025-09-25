@@ -1,0 +1,17 @@
+{
+  "game": {
+    "title": "时光信物",
+    "version": "1.0.0",
+    "defaultLanguage": "zh_CN"
+  },
+  "settings": {
+    "targetFPS": 60,
+    "autoSave": true,
+    "debugMode": false
+  },
+  "paths": {
+    "saves": "saves/",
+    "assets": "assets/",
+    "logs": "logs/"
+  }
+}

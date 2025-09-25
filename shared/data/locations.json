@@ -1,0 +1,62 @@
+{
+  "locations": {
+    "time_corner_bookstore": {
+      "name": "时光角落书店",
+      "descriptions": {
+        "default": "这是一家温馨的旧书店，书架上摆满了各个年代的书籍。阳光透过窗户洒在木制地板上，空气中弥漫着纸张的香味。",
+        "evening": "夜幕降临，书店内亮起了暖黄色的灯光。在这样的氛围中，整个空间显得更加宁静而神秘。",
+        "rainy": "雨点轻敲着书店的窗户，店内显得格外安静。你能听到远处传来的雨声，为这个空间增添了一丝诗意。"
+      },
+      "exits": {
+        "north": "old_street",
+        "east": "small_courtyard"
+      },
+      "items": ["old_diary", "dusty_photo"],
+      "characters": ["bookstore_owner"],
+      "interactions": [
+        {
+          "id": "examine_bookshelf",
+          "name": "检查书架",
+          "description": "仔细查看书架上的书籍",
+          "requirements": {
+            "attribute": "observation",
+            "threshold": 2
+          },
+          "results": {
+            "text": "在书架的角落，你发现了一本看起来很特别的日记...",
+            "items": ["hidden_diary"],
+            "insights": ["bookstore_secret"]
+          }
+        }
+      ]
+    },
+    "old_street": {
+      "name": "老街",
+      "descriptions": {
+        "default": "这是一条古老的石板路，两旁是历史悠久的建筑。街道虽然不宽，但充满了时代的痕迹。"
+      },
+      "exits": {
+        "south": "time_corner_bookstore",
+        "west": "harbor",
+        "north": "town_square"
+      },
+      "items": ["street_lamp_clue"],
+      "characters": [],
+      "interactions": [
+        {
+          "id": "examine_street_lamp",
+          "name": "检查路灯",
+          "description": "观察古老的街灯",
+          "requirements": {
+            "attribute": "observation",
+            "threshold": 1
+          },
+          "results": {
+            "text": "路灯底座上刻着一些模糊的文字...",
+            "insights": ["street_history"]
+          }
+        }
+      ]
+    }
+  }
+}

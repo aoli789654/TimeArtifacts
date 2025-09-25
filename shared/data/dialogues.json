@@ -1,0 +1,82 @@
+{
+  "dialogues": {
+    "bookstore_owner_first_meeting": {
+      "speaker": "书店老板",
+      "text": "欢迎来到时光角落，年轻人。你看起来像是在寻找什么特别的东西。",
+      "options": [
+        {
+          "id": "ask_about_memories",
+          "text": "我在寻找一些旧物件，关于这个城市过去的记忆。",
+          "requirements": {},
+          "results": {
+            "dialogue": "bookstore_owner_about_memories",
+            "attributes": {
+              "communication": 1
+            }
+          }
+        },
+        {
+          "id": "observe_sadness",
+          "text": "[观察] 注意到他眼中的忧伤。",
+          "requirements": {
+            "attribute": "observation",
+            "threshold": 3
+          },
+          "results": {
+            "dialogue": "bookstore_owner_personal_story",
+            "insights": ["owner_sadness"],
+            "attributes": {
+              "empathy": 2
+            }
+          }
+        },
+        {
+          "id": "casual_response",
+          "text": "只是随便看看。",
+          "requirements": {},
+          "results": {
+            "dialogue": "bookstore_owner_casual_response"
+          }
+        }
+      ]
+    },
+    "bookstore_owner_about_memories": {
+      "speaker": "书店老板",
+      "text": "啊，寻找记忆的人...这座城市确实藏着许多故事。你可以在我的书店里找找，也许会有意外的发现。",
+      "options": [
+        {
+          "id": "ask_about_city_history",
+          "text": "能告诉我一些这座城市的历史吗？",
+          "requirements": {},
+          "results": {
+            "dialogue": "bookstore_owner_city_history",
+            "insights": ["city_past"]
+          }
+        },
+        {
+          "id": "thank_and_explore",
+          "text": "谢谢您的建议，我会仔细看看的。",
+          "requirements": {},
+          "results": {
+            "end_dialogue": true
+          }
+        }
+      ]
+    },
+    "bookstore_owner_city_history": {
+      "speaker": "书店老板",
+      "text": "这座城市曾经是重要的贸易港口，许多人带着梦想来到这里。时间流逝，有些人留下了，有些人离开了，但他们的故事...永远留在这里。",
+      "options": [
+        {
+          "id": "ask_about_artifacts",
+          "text": "有没有什么特殊的物品留下来？",
+          "requirements": {},
+          "results": {
+            "dialogue": "bookstore_owner_artifacts",
+            "insights": ["time_artifacts_hint"]
+          }
+        }
+      ]
+    }
+  }
+}
