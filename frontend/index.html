@@ -4,162 +4,2408 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>时光信物 - Time Artifacts</title>
-    <meta name="description" content="一个关于记忆与遗忘的文本冒险游戏">
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-    
-    <!-- 主样式文件 -->
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/themes.css">
-    <link rel="stylesheet" href="css/components.css">
-    
-    <!-- Google Fonts (可选) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
-</head>
-<body data-theme="default">
-    <!-- 游戏主容器 -->
-    <div id="game-container">
-        
-        <!-- 连接状态指示器 -->
-        <div id="connection-status" class="connection-status connecting">
-            <span class="status-dot"></span>
-            <span class="status-text">连接中...</span>
-        </div>
-        
-        <!-- 游戏标题栏 -->
-        <header class="game-header">
-            <h1 class="game-title">时光信物</h1>
-            <div class="game-subtitle">Time Artifacts</div>
-        </header>
-        
-        <!-- 主游戏区域 -->
-        <main class="game-layout">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* 加载页面 */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-logo {
+            font-size: 3em;
+            margin-bottom: 30px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .loading-text {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px #4fc3f7; }
+            to { text-shadow: 0 0 30px #29b6f6, 0 0 40px #03a9f4; }
+        }
+
+        /* 游戏开始页面 */
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 900;
+        }
+
+        .game-title {
+            font-size: 4em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(79, 195, 247, 0.8);
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+
+        .game-subtitle {
+            font-size: 1.5em;
+            margin-bottom: 50px;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+        .start-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .menu-button {
+            background: linear-gradient(45deg, #4fc3f7, #29b6f6);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #29b6f6, #03a9f4);
+        }
+
+        .menu-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* 游戏主界面 */
+        .game-container {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .game-title-small {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .game-subtitle-small {
+            font-size: 1.2em;
+            opacity: 0.8;
+        }
+
+        .game-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .main-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .panel-title {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #4fc3f7;
+        }
+
+        /* 场景显示 */
+        .scene-display {
+            margin-bottom: 25px;
+        }
+
+        .location-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(79, 195, 247, 0.2);
+            border-radius: 10px;
+        }
+
+        .location-name {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .location-description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border-left: 4px solid #4fc3f7;
+        }
+
+        /* 属性面板 */
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .attribute-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .attribute-icon {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .attribute-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4fc3f7;
+        }
+
+        /* 物品栏 */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .inventory-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .inventory-item:hover {
+            border-color: #4fc3f7;
+            background: rgba(79, 195, 247, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .inventory-item-icon {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        /* 物品等级样式 */
+        .grade-basic {
+            filter: brightness(0.8);
+        }
+
+        .grade-perfect {
+            filter: brightness(1.2) drop-shadow(0 0 8px #4fc3f7);
+            animation: perfectGlow 2s ease-in-out infinite alternate;
+        }
+
+        .grade-story {
+            filter: brightness(1.1) drop-shadow(0 0 6px #ff9800);
+            animation: storyGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes perfectGlow {
+            from { filter: brightness(1.2) drop-shadow(0 0 8px #4fc3f7); }
+            to { filter: brightness(1.4) drop-shadow(0 0 12px #81d4fa); }
+        }
+
+        @keyframes storyGlow {
+            from { filter: brightness(1.1) drop-shadow(0 0 6px #ff9800); }
+            to { filter: brightness(1.3) drop-shadow(0 0 10px #ffb74d); }
+        }
+
+        .inventory-item-name {
+            font-size: 0.8em;
+            word-break: break-all;
+        }
+
+        /* 操作按钮 */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .action-button {
+            background: linear-gradient(45deg, #4fc3f7, #29b6f6);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #29b6f6, #03a9f4);
+        }
+
+        /* 游戏菜单 */
+        .game-menu {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .menu-toggle {
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            width: 50px;
+            height: 50px;
+        }
+
+        .menu-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 10px;
+            padding: 10px;
+            display: none;
+            min-width: 150px;
+        }
+
+        .menu-item {
+            background: none;
+            border: none;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            border-radius: 5px;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* 专门的对话框系统 */
+        .dialogue-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .dialogue-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+        }
+
+        .dialogue-container {
+            position: relative;
+            display: flex;
+            max-width: 800px;
+            width: 90%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            border-radius: 20px;
+            border: 2px solid rgba(79, 195, 247, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            animation: dialogueSlideIn 0.5s ease-out;
+        }
+
+        .dialogue-avatar {
+            width: 120px;
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-right: 2px solid rgba(79, 195, 247, 0.3);
+        }
+
+        .avatar-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(79, 195, 247, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            margin-bottom: 10px;
+            border: 2px solid rgba(79, 195, 247, 0.5);
+        }
+
+        .avatar-name {
+            font-size: 0.9em;
+            color: #4fc3f7;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .dialogue-content {
+            flex: 1;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dialogue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(79, 195, 247, 0.2);
+        }
+
+        .dialogue-speaker {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #4fc3f7;
+            text-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
+        }
+
+        .dialogue-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5em;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dialogue-close:hover {
+            opacity: 1;
+            color: #4fc3f7;
+        }
+
+        .dialogue-text-container {
+            position: relative;
+            margin-bottom: 25px;
+            min-height: 100px;
+        }
+
+        .dialogue-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .dialogue-cursor {
+            display: inline;
+            color: #4fc3f7;
+            animation: cursorBlink 1s infinite;
+        }
+
+        .dialogue-choices {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .dialogue-choice {
+            background: linear-gradient(45deg, rgba(79, 195, 247, 0.1), rgba(79, 195, 247, 0.2));
+            border: 1px solid rgba(79, 195, 247, 0.4);
+            border-radius: 12px;
+            padding: 15px 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dialogue-choice::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(79, 195, 247, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .dialogue-choice:hover {
+            background: linear-gradient(45deg, rgba(79, 195, 247, 0.2), rgba(79, 195, 247, 0.4));
+            border-color: #4fc3f7;
+            transform: translateX(8px);
+            box-shadow: 0 5px 15px rgba(79, 195, 247, 0.3);
+        }
+
+        .dialogue-choice:hover::before {
+            left: 100%;
+        }
+
+        .dialogue-controls {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .dialogue-skip {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 8px 15px;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .dialogue-skip:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* 对话框动画 */
+        @keyframes dialogueSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes cursorBlink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* 打字机效果 */
+        .typewriter-text {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 2s steps(40, end);
+        }
+
+        /* 存档界面 */
+        .save-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .save-panel {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .save-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .save-slot {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-slot:hover {
+            border-color: #4fc3f7;
+            background: rgba(79, 195, 247, 0.2);
+        }
+
+        .save-slot.empty {
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        .save-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-button {
+            background: #e74c3c;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .game-content {
+                grid-template-columns: 1fr;
+            }
             
-            <!-- 主要故事面板 -->
-            <section id="story-panel" class="panel story-panel">
-                <header class="panel-header">
-                    <h2 id="location-name" class="location-name">游戏世界</h2>
-                    <div id="location-subtitle" class="location-subtitle">正在载入...</div>
-                </header>
-                
-                <div class="panel-content">
-                    <div id="scene-description" class="scene-description">
-                        <p class="loading-text">正在连接游戏服务器，请稍候...</p>
+            .attributes-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .game-title {
+                font-size: 2.5em;
+            }
+        }
+
+        /* 开场序列 */
+        .opening-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            display: none;
+            z-index: 2000;
+            overflow: hidden;
+        }
+
+        .opening-scene {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bookstore-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #8B4513 0%, #A0522D 50%, #CD853F 100%);
+            opacity: 0.3;
+        }
+
+        .sunlight-rays {
+            position: absolute;
+            top: 20%;
+            right: 30%;
+            width: 200px;
+            height: 400px;
+            background: linear-gradient(45deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.05) 30%, 
+                transparent 50%,
+                rgba(255, 255, 255, 0.05) 70%, 
+                rgba(255, 255, 255, 0.1) 100%);
+            transform: rotate(15deg);
+            animation: sunlightFlicker 4s ease-in-out infinite;
+        }
+
+        .dust-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .dust-particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: dustFloat 8s linear infinite;
+        }
+
+        .opening-text-container {
+            position: relative;
+            max-width: 800px;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            z-index: 10;
+        }
+
+        .opening-text {
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #ffffff;
+            text-align: center;
+            opacity: 0;
+        }
+
+        .opening-sound-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4em;
+            opacity: 0;
+            animation: soundPulse 2s ease-out;
+        }
+
+        .continue-prompt {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1em;
+            animation: promptBlink 2s ease-in-out infinite;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes sunlightFlicker {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes dustFloat {
+            0% {
+                transform: translateY(100vh) translateX(0px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes soundPulse {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes promptBlink {
+            0%, 50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0 auto;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: orange; }
+        }
+
+        /* 隐藏类 */
+        .hidden {
+            display: none !important;
+        }
+
+        /* 结局动画样式 */
+        .ending-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ending-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(79, 195, 247, 0.1) 0%, transparent 70%);
+            animation: endingGlow 4s ease-in-out infinite alternate;
+        }
+
+        .ending-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .ending-content {
+            text-align: center;
+            z-index: 10;
+            max-width: 800px;
+            padding: 40px;
+        }
+
+        .ending-title {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #4fc3f7;
+            text-shadow: 0 0 30px rgba(79, 195, 247, 0.8);
+            animation: endingTitleFade 2s ease-out;
+        }
+
+        .ending-text {
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            animation: endingTextFade 3s ease-out 1s both;
+        }
+
+        .ending-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            animation: endingButtonsFade 2s ease-out 4s both;
+        }
+
+        .ending-button {
+            background: linear-gradient(45deg, #1976d2, #42a5f5);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .ending-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(45deg, #1565c0, #29b6f6);
+        }
+
+        .button-icon {
+            font-size: 1.2em;
+        }
+
+        /* 结局动画关键帧 */
+        @keyframes endingGlow {
+            0% { opacity: 0.1; }
+            100% { opacity: 0.3; }
+        }
+
+        @keyframes endingTitleFade {
+            0% { 
+                opacity: 0; 
+                transform: translateY(-50px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes endingTextFade {
+            0% { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes endingButtonsFade {
+            0% { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes endingParticleFloat {
+            0% { 
+                transform: translateY(100vh) rotate(0deg); 
+                opacity: 0; 
+            }
+            10% { 
+                opacity: 1; 
+            }
+            90% { 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateY(-100px) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+
+        .ending-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #4fc3f7;
+            border-radius: 50%;
+            animation: endingParticleFloat 8s linear infinite;
+            box-shadow: 0 0 6px #4fc3f7;
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载页面 -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">⏰ 时光信物</div>
+        <div class="loading-text">正在连接时光之门...</div>
+        <div class="loading-spinner"></div>
                     </div>
                     
-                    <div id="story-log" class="story-log">
-                        <!-- 游戏进程历史记录 -->
+    <!-- 游戏开始页面 -->
+    <div class="start-screen" id="startScreen">
+        <div class="game-title">⏰ 时光信物</div>
+        <div class="game-subtitle">一段关于记忆与时光的奇幻之旅</div>
+        <div class="start-menu">
+            <button class="menu-button" onclick="startNewGame()">🎮 开始新游戏</button>
+            <button class="menu-button" onclick="showLoadGame()" id="loadGameBtn">📂 读取存档</button>
+            <button class="menu-button" onclick="showSettings()">⚙️ 游戏设置</button>
+            <button class="menu-button" onclick="showAbout()">ℹ️ 关于游戏</button>
                     </div>
                 </div>
-            </section>
-            
-            <!-- 侧边栏 -->
-            <aside class="sidebar">
-                
-                <!-- 玩家状态面板 -->
-                <section id="player-panel" class="panel player-panel">
-                    <header class="panel-header">
-                        <h3>玩家状态</h3>
-                    </header>
-                    <div class="panel-content">
-                        <div id="player-attributes" class="player-attributes">
-                            <div class="loading-placeholder">载入中...</div>
+                    
+    <!-- 游戏主界面 -->
+    <div class="game-container" id="gameContainer">
+        <!-- 游戏菜单 -->
+        <div class="game-menu">
+            <button class="menu-toggle" onclick="toggleGameMenu()">⚙️</button>
+            <div class="menu-dropdown" id="gameMenuDropdown">
+                <button class="menu-item" onclick="showSaveGame()">💾 保存游戏</button>
+                <button class="menu-item" onclick="showLoadGame()">📂 读取存档</button>
+                <button class="menu-item" onclick="returnToMainMenu()">🏠 返回主菜单</button>
+                <button class="menu-item" onclick="showSettings()">⚙️ 设置</button>
+                    </div>
+                </div>
+
+        <!-- 游戏标题 -->
+        <div class="game-header">
+            <div class="game-title-small">
+                <span>⏰</span>
+                <span>时光信物</span>
+            </div>
+            <div class="game-subtitle-small">一段关于记忆与时光的奇幻之旅</div>
                         </div>
                         
-                        <div id="player-inventory" class="player-inventory">
-                            <h4>物品栏</h4>
-                            <div class="inventory-items">
-                                <div class="empty-inventory">暂无物品</div>
+        <!-- 游戏内容 -->
+        <div class="game-content">
+            <!-- 主面板 -->
+            <div class="main-panel">
+                <!-- 场景显示 -->
+                <div class="scene-display">
+                    <div class="location-header">
+                        <span class="location-name" id="locationName">🏠 时光角落书店</span>
                             </div>
+                    <div class="location-description" id="locationDescription">
+                        你站在时光角落书店中，这里充满了古老书籍的香味。阳光透过百叶窗在布满灰尘的空气中划出几道光柱。
                         </div>
                     </div>
-                </section>
-                
-                <!-- 操作面板 -->
-                <section id="actions-panel" class="panel actions-panel">
-                    <header class="panel-header">
-                        <h3>可用操作</h3>
-                    </header>
-                    <div class="panel-content">
-                        <div id="available-actions" class="available-actions">
-                            <div class="loading-placeholder">载入中...</div>
+                        
+                <!-- 可执行操作 -->
+                <div class="panel">
+                    <div class="panel-title">🎯 可执行操作</div>
+                    <div class="actions-grid" id="actionsGrid">
+                        <button class="action-button" onclick="executeAction('整理书架')">📚 整理书架</button>
+                        <button class="action-button" onclick="executeAction('查看记忆寻回处')">🔍 查看记忆寻回处</button>
+                        <button class="action-button" onclick="executeAction('前往老街区')">🚶 前往老街区</button>
                         </div>
                     </div>
-                </section>
-                
-                <!-- 设置面板 -->
-                <section id="settings-panel" class="panel settings-panel">
-                    <header class="panel-header">
-                        <h3>设置</h3>
-                    </header>
-                    <div class="panel-content">
-                        <div class="setting-group">
-                            <label for="theme-selector">界面主题</label>
-                            <select id="theme-selector" class="theme-selector">
-                                <option value="default">默认</option>
-                                <option value="vintage">怀旧</option>
-                                <option value="dark">暗夜</option>
-                            </select>
+                    </div>
+
+            <!-- 侧面板 -->
+            <div class="side-panel">
+                <!-- 玩家状态 -->
+                <div class="panel">
+                    <div class="panel-title">📊 玩家状态</div>
+                    <div class="attributes-grid">
+                        <div class="attribute-item">
+                            <div class="attribute-icon">👁️</div>
+                            <div>观察力</div>
+                            <div class="attribute-value" id="observation">1</div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-icon">💬</div>
+                            <div>沟通力</div>
+                            <div class="attribute-value" id="communication">1</div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-icon">⚡</div>
+                            <div>行动力</div>
+                            <div class="attribute-value" id="action">1</div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-icon">❤️</div>
+                            <div>共情值</div>
+                            <div class="attribute-value" id="empathy">1</div>
+                        </div>
+                    </div>
                         </div>
                         
-                        <div class="setting-group">
-                            <label for="text-speed">文字速度</label>
-                            <input type="range" id="text-speed" min="1" max="10" value="5" class="speed-slider">
+                <!-- 物品栏 -->
+                <div class="panel">
+                    <div class="panel-title">🎒 物品栏</div>
+                    <div class="inventory-grid" id="inventoryGrid">
+                        <div class="inventory-item" onclick="showItemDetail('委托信')">
+                            <div class="inventory-item-icon">📜</div>
+                            <div class="inventory-item-name">委托信</div>
                         </div>
-                        
-                        <div class="setting-group">
-                            <button id="reconnect-btn" class="reconnect-btn" disabled>重新连接</button>
+                        </div>
                         </div>
                     </div>
-                </section>
-                
-            </aside>
-            
-        </main>
+                    </div>
+                        </div>
+                        
+    <!-- 专门的对话框系统 -->
+    <div class="dialogue-overlay" id="dialogueOverlay">
+        <div class="dialogue-backdrop"></div>
+        <div class="dialogue-container">
+            <div class="dialogue-avatar" id="dialogueAvatar">
+                <div class="avatar-image" id="avatarImage">👤</div>
+                <div class="avatar-name" id="avatarName">角色</div>
+                        </div>
+            <div class="dialogue-content">
+                <div class="dialogue-header">
+                    <span class="dialogue-speaker" id="dialogueSpeaker">对话</span>
+                    <button class="dialogue-close" onclick="closeDialogue()">&times;</button>
+                    </div>
+                <div class="dialogue-text-container">
+                    <div class="dialogue-text" id="dialogueText"></div>
+                    <div class="dialogue-cursor" id="dialogueCursor">▋</div>
+                </div>
+                <div class="dialogue-choices" id="dialogueChoices">
+                    <!-- 对话选择将在这里动态生成 -->
+                </div>
+                <div class="dialogue-controls">
+                    <button class="dialogue-skip" id="dialogueSkip" onclick="skipDialogueAnimation()" style="display: none;">跳过动画</button>
+                </div>
+            </div>
+        </div>
+    </div>
         
-        <!-- 对话面板（模态窗口） -->
-        <div id="dialogue-modal" class="modal hidden">
-            <div class="modal-backdrop"></div>
-            <div class="modal-content dialogue-content">
-                <header class="dialogue-header">
-                    <div id="speaker-name" class="speaker-name">NPC名称</div>
-                    <button id="close-dialogue" class="close-btn">&times;</button>
-                </header>
-                
-                <div class="dialogue-body">
-                    <div id="dialogue-text" class="dialogue-text">
-                        对话内容将在这里显示...
+    <!-- 存档界面 -->
+    <div class="save-overlay" id="saveOverlay">
+        <div class="save-panel">
+            <h2 id="saveTitle">保存游戏</h2>
+            <div class="save-slots" id="saveSlots">
+                <!-- 存档槽将在这里动态生成 -->
+            </div>
+            <button class="close-button" onclick="closeSavePanel()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 开场序列 -->
+    <div class="opening-overlay" id="openingOverlay">
+        <div class="opening-scene">
+            <!-- 书店背景 -->
+            <div class="bookstore-background"></div>
+            
+            <!-- 阳光光线 -->
+            <div class="sunlight-rays"></div>
+            
+            <!-- 灰尘粒子 -->
+            <div class="dust-particles" id="dustParticles">
+                <!-- 灰尘粒子将动态生成 -->
+            </div>
+            
+            <!-- 音效显示 -->
+            <div class="opening-sound-effect" id="soundEffect">🔔</div>
+            
+            <!-- 开场文本 -->
+            <div class="opening-text-container" id="openingTextContainer">
+                <div class="opening-text" id="openingText">
+                    <!-- 开场文本将分段显示 -->
                     </div>
                 </div>
                 
-                <footer class="dialogue-footer">
-                    <div id="dialogue-options" class="dialogue-options">
-                        <!-- 对话选项将动态插入 -->
+            <!-- 继续提示 -->
+            <div class="continue-prompt" id="continuePrompt" onclick="continueOpening()" style="display: none;">
+                点击继续 ✨
                     </div>
-                </footer>
             </div>
         </div>
         
-        <!-- 通知区域 -->
-        <div id="notifications" class="notifications-container">
-            <!-- 通知消息将动态插入 -->
+    <!-- 结局动画覆盖层 -->
+    <div class="ending-overlay" id="endingOverlay">
+        <div class="ending-background"></div>
+        <div class="ending-particles" id="endingParticles"></div>
+        <div class="ending-content">
+            <div class="ending-title" id="endingTitle"></div>
+            <div class="ending-text" id="endingText"></div>
+            <div class="ending-buttons" id="endingButtons" style="display: none;">
+                <button class="ending-button" onclick="returnToMainMenu()">
+                    <span class="button-icon">🏠</span>
+                    返回开始菜单
+                </button>
+                <button class="ending-button" onclick="loadGameFromEnding()">
+                    <span class="button-icon">📂</span>
+                    读取存档
+                </button>
+            </div>
+        </div>
         </div>
         
+    <script>
+        // 游戏状态
+        let gameState = {
+            connected: false,
+            currentLocation: '时光角落书店',
+            attributes: {
+                observation: 1,
+                communication: 1,
+                action: 1,
+                empathy: 1
+            },
+            inventory: ['委托信'],
+            availableActions: ['整理书架', '查看记忆寻回处', '前往老街区'],
+            gameStarted: false
+        };
+
+        const API_BASE = 'http://localhost:8081/api';
+
+        // 页面加载完成后自动开始连接
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(autoConnect, 1000); // 1秒后开始连接
+        });
+
+        // 自动连接后端
+        async function autoConnect() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const startScreen = document.getElementById('startScreen');
+            
+            try {
+                // 更新加载文本
+                document.querySelector('.loading-text').textContent = '正在连接服务器...';
+                
+                const response = await fetch(`${API_BASE}/gamestate`);
+                if (response.ok) {
+                    const data = await response.json();
+                    gameState.connected = true;
+                    
+                    // 更新加载文本
+                    document.querySelector('.loading-text').textContent = '连接成功！正在初始化游戏...';
+                    
+                    // 延迟显示开始页面
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                        startScreen.style.display = 'flex';
+                        
+                        // 检查是否有存档
+                        checkSaveFiles();
+                    }, 1500);
+                } else {
+                    throw new Error('服务器连接失败');
+                }
+            } catch (error) {
+                console.error('连接失败:', error);
+                document.querySelector('.loading-text').textContent = '连接失败，请检查服务器是否启动...';
+                
+                // 3秒后重试
+                setTimeout(autoConnect, 3000);
+            }
+        }
+
+        // 检查存档文件
+        function checkSaveFiles() {
+            const saves = getSaveFiles();
+            const loadGameBtn = document.getElementById('loadGameBtn');
+            
+            if (saves.length === 0) {
+                loadGameBtn.disabled = true;
+                loadGameBtn.textContent = '📂 暂无存档';
+            } else {
+                loadGameBtn.disabled = false;
+                loadGameBtn.textContent = '📂 读取存档';
+            }
+        }
+
+        // 开始新游戏
+        function startNewGame() {
+            const startScreen = document.getElementById('startScreen');
+            
+            // 重置游戏状态
+            gameState = {
+                connected: true,
+                currentLocation: '时光角落书店',
+                attributes: {
+                    observation: 1,
+                    communication: 1,
+                    action: 1,
+                    empathy: 1
+                },
+                inventory: [],
+                availableActions: ['整理书架'],
+                gameStarted: true,
+                openingPlayed: false
+            };
+            
+            // 重置开场序列状态
+            resetOpeningSequence();
+            
+            // 切换到游戏界面并播放开场动画
+            startScreen.style.display = 'none';
+            playOpeningSequence();
+            
+            console.log('开始新游戏');
+        }
+
+        // 更新游戏显示
+        function updateGameDisplay() {
+            // 更新位置信息
+            document.getElementById('locationName').textContent = `🏠 ${gameState.currentLocation}`;
+            
+            // 更新属性
+            document.getElementById('observation').textContent = gameState.attributes.observation;
+            document.getElementById('communication').textContent = gameState.attributes.communication;
+            document.getElementById('action').textContent = gameState.attributes.action;
+            document.getElementById('empathy').textContent = gameState.attributes.empathy;
+            
+            // 更新物品栏
+            updateInventoryDisplay();
+            
+            // 更新操作按钮
+            updateActionsDisplay();
+        }
+
+        // 更新物品栏显示
+        function updateInventoryDisplay() {
+            const inventoryGrid = document.getElementById('inventoryGrid');
+            inventoryGrid.innerHTML = '';
+            
+            gameState.inventory.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'inventory-item';
+                
+                // 处理新的物品对象格式
+                let itemName, itemDescription, itemGrade;
+                if (typeof item === 'object' && item.name) {
+                    itemName = item.name;
+                    itemDescription = item.description;
+                    itemGrade = item.grade;
+                } else {
+                    // 向后兼容旧的字符串格式
+                    itemName = item;
+                    itemDescription = '一件神秘的物品';
+                    itemGrade = 0;
+                }
+                
+                itemDiv.onclick = () => showItemDetail({
+                    name: itemName,
+                    description: itemDescription,
+                    grade: itemGrade
+                });
+                
+                const icon = getItemIcon(itemName);
+                const gradeClass = getGradeClass(itemGrade);
+                itemDiv.innerHTML = `
+                    <div class="inventory-item-icon ${gradeClass}">${icon}</div>
+                    <div class="inventory-item-name">${itemName}</div>
+                `;
+                
+                inventoryGrid.appendChild(itemDiv);
+            });
+        }
+
+        // 获取物品图标
+        function getItemIcon(itemName) {
+            const icons = {
+                '委托信': '📜',
+                // 怀表相关
+                '停摆的旧怀表': '⌚',
+                '修复一新的旧怀表': '✨⌚',
+                // 乐谱相关
+                '《梧桐雨》残谱': '🎵',
+                '完整的《梧桐雨》乐谱': '🎼',
+                '梧桐雨手写乐谱': '🎵',
+                // 照片相关
+                '1975届集体照': '📷',
+                '1975届集体照（完整版）': '📸',
+                '育才中学1975届集体照': '📷',
+                // 故事物品
+                '合照的复刻版': '🖼️',
+                '《梧桐雨》演奏录音': '🎧',
+                '舞会的邀请函': '💌',
+                '周奶奶的获奖证明': '🏆',
+                // 其他
+                '相框': '🖼️',
+                '揉皱的进货单': '📋'
+            };
+            return icons[itemName] || '📦';
+        }
+
+        // 获取物品等级样式
+        function getGradeClass(grade) {
+            switch(grade) {
+                case 0: return 'grade-basic';      // 基础版
+                case 1: return 'grade-perfect';    // 完美版
+                case 2: return 'grade-story';      // 故事物品
+                default: return 'grade-basic';
+            }
+        }
+
+        // 更新操作按钮显示
+        function updateActionsDisplay() {
+            console.log('更新操作按钮，当前可用操作:', gameState.availableActions);
+            const actionsGrid = document.getElementById('actionsGrid');
+            actionsGrid.innerHTML = '';
+            
+            if (!gameState.availableActions || gameState.availableActions.length === 0) {
+                console.log('警告：没有可用操作');
+                return;
+            }
+            
+            gameState.availableActions.forEach(action => {
+                const button = document.createElement('button');
+                button.className = 'action-button';
+                button.onclick = () => executeAction(action);
+                
+                const icon = getActionIcon(action);
+                button.innerHTML = `${icon} ${action}`;
+                
+                actionsGrid.appendChild(button);
+                console.log('添加操作按钮:', action);
+            });
+        }
+
+        // 获取操作图标
+        function getActionIcon(actionName) {
+            const icons = {
+                '整理书架': '📚',
+                '查看记忆寻回处': '🔍',
+                '前往老街区': '🚶',
+                '前往钟表铺': '🕰️',
+                '前往乐器店': '🎹',
+                '前往育才中学': '🏫',
+                '前往茶馆': '🍵',
+                '回到书店': '🏠',
+                '与陈老板对话': '💬',
+                '与李老师对话': '💬',
+                '与张老师对话': '💬',
+                '与周奶奶对话': '💬',
+                '与苏晓对话': '💬',
+                '观察柜台': '👁️',
+                '帮助店主收拾': '🤝',
+                '欣赏乐曲': '🎵',
+                '观察钢琴': '👁️',
+                '前往档案馆': '📚',
+                '帮忙整理资料': '📋',
+                '交付时光信物': '🎁'
+            };
+            return icons[actionName] || '🎯';
+        }
+
+        // 执行操作
+        let isProcessingAction = false;
+        
+        async function executeAction(action) {
+            if (isProcessingAction) {
+                console.log('操作正在处理中，忽略重复点击');
+                return;
+            }
+            
+            if (!gameState.connected) {
+                console.log('未连接到服务器');
+                showDialogue({
+                    speaker: '系统提示',
+                    text: '未连接到服务器，请稍后重试',
+                    choices: []
+                });
+                return;
+            }
+            
+            isProcessingAction = true;
+            console.log('执行操作:', action);
+            
+            try {
+                const command = {
+                    type: 'action',
+                    action: action
+                };
+                
+                console.log('发送命令:', JSON.stringify(command));
+                
+                const response = await fetch(`${API_BASE}/command`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(command)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('收到响应:', JSON.stringify(data, null, 2));
+                    handleServerResponse(data);
+                } else {
+                    console.error('服务器响应错误:', response.status, response.statusText);
+                    showDialogue({
+                        speaker: '系统提示',
+                        text: `服务器响应错误: ${response.status}`,
+                        choices: []
+                    });
+                }
+            } catch (error) {
+                console.error('执行操作失败:', error);
+                showDialogue({
+                    speaker: '系统提示',
+                    text: `执行操作失败: ${error.message}`,
+                    choices: []
+                });
+            } finally {
+                isProcessingAction = false;
+            }
+        }
+
+        // 处理服务器响应
+        function handleServerResponse(data) {
+            console.log('处理服务器响应，类型:', data.type, '数据:', data);
+            
+            if (data.type === 'gameState' && data.data) {
+                console.log('处理游戏状态更新');
+                // 更新游戏状态
+                const state = data.data;
+                
+                if (state.location) {
+                    gameState.currentLocation = state.location;
+                }
+                
+                if (state.attributes) {
+                    gameState.attributes = state.attributes;
+                }
+                
+                if (state.inventory) {
+                    gameState.inventory = state.inventory;
+                }
+                
+                if (state.actions) {
+                    gameState.availableActions = state.actions;
+                }
+                
+                // 更新位置描述
+                if (state.description) {
+                    document.getElementById('locationDescription').textContent = state.description;
+                }
+                
+                // 更新显示
+                updateGameDisplay();
+            }
+            else if (data.type === 'dialogue') {
+                console.log('处理对话');
+                showDialogue(data);
+            }
+            else if (data.type === 'sceneUpdate') {
+                console.log('处理场景更新');
+                showSceneUpdate(data);
+            }
+            else {
+                console.log('未知响应类型:', data.type);
+            }
+        }
+
+        // 显示对话
+        // 全局变量用于控制打字机效果
+        let typewriterTimeout;
+        let isTyping = false;
+
+        function showDialogue(data) {
+            const overlay = document.getElementById('dialogueOverlay');
+            const speaker = document.getElementById('dialogueSpeaker');
+            const avatarImage = document.getElementById('avatarImage');
+            const avatarName = document.getElementById('avatarName');
+            const textElement = document.getElementById('dialogueText');
+            const cursor = document.getElementById('dialogueCursor');
+            const choices = document.getElementById('dialogueChoices');
+            const skipButton = document.getElementById('dialogueSkip');
+            
+            // 正确访问嵌套的数据结构
+            const dialogueData = data.data || data;
+            const speakerName = dialogueData.speaker || '未知';
+            const dialogueText = dialogueData.text || '';
+            
+            // 存储对话数据供跳过功能使用
+            overlay.dialogueData = dialogueData;
+            
+            // 设置角色信息
+            speaker.textContent = speakerName;
+            avatarName.textContent = speakerName;
+            
+            // 设置角色头像
+            const avatarIcon = getCharacterAvatar(speakerName);
+            avatarImage.textContent = avatarIcon;
+            
+            // 清空文本和选择
+            textElement.textContent = '';
+            cursor.style.display = 'inline';
+            choices.innerHTML = '';
+            choices.style.display = 'none';
+            
+            // 显示对话框
+            overlay.style.display = 'flex';
+            
+            // 开始打字机效果
+            isTyping = true;
+            skipButton.style.display = 'inline-block';
+            typewriterEffect(textElement, dialogueText, () => {
+                // 打字完成后的回调
+                cursor.style.display = 'none';
+                skipButton.style.display = 'none';
+                isTyping = false;
+                
+                // 显示对话选择
+                showDialogueChoices(dialogueData, choices);
+            });
+        }
+
+        function getCharacterAvatar(speakerName) {
+            const avatars = {
+                '陈老板': '🔧',
+                '李老师': '🎵',
+                '张老师': '📚',
+                '周奶奶': '👵',
+                '苏晓': '👨',
+                '保安大叔': '👮',
+                '店长老先生': '🎼'
+            };
+            return avatars[speakerName] || '👤';
+        }
+
+        function typewriterEffect(element, text, callback) {
+            let index = 0;
+            const speed = 50; // 打字速度（毫秒）
+            
+            function type() {
+                if (index < text.length && isTyping) {
+                    element.textContent += text.charAt(index);
+                    index++;
+                    typewriterTimeout = setTimeout(type, speed);
+                } else {
+                    if (callback) callback();
+                }
+            }
+            
+            type();
+        }
+
+        function skipDialogueAnimation() {
+            if (isTyping) {
+                clearTimeout(typewriterTimeout);
+                isTyping = false;
+                
+                const textElement = document.getElementById('dialogueText');
+                const cursor = document.getElementById('dialogueCursor');
+                const skipButton = document.getElementById('dialogueSkip');
+                const choices = document.getElementById('dialogueChoices');
+                const overlay = document.getElementById('dialogueOverlay');
+                
+                // 立即显示完整文本
+                const dialogueData = overlay.dialogueData;
+                textElement.textContent = dialogueData.text || '';
+                
+                cursor.style.display = 'none';
+                skipButton.style.display = 'none';
+                
+                // 显示对话选择
+                showDialogueChoices(dialogueData, choices);
+            }
+        }
+
+        function showDialogueChoices(dialogueData, choicesContainer) {
+            const optionsArray = dialogueData.options || dialogueData.choices || [];
+            
+            if (optionsArray && optionsArray.length > 0) {
+                optionsArray.forEach((choice, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'dialogue-choice';
+                    button.textContent = choice.text || choice.name || choice;
+                    button.style.animationDelay = (index * 0.1) + 's';
+                    button.onclick = () => {
+                        if (!isProcessingDialogue) {
+                            selectDialogueChoice(choice.id || choice.value || choice);
+                        }
+                    };
+                    choicesContainer.appendChild(button);
+                });
+            } else {
+                // 如果没有选择，添加一个"继续"按钮
+                const button = document.createElement('button');
+                button.className = 'dialogue-choice';
+                button.textContent = '继续';
+                button.onclick = () => closeDialogue();
+                choicesContainer.appendChild(button);
+            }
+            
+            choicesContainer.style.display = 'flex';
+        }
+
+        function closeDialogue() {
+            const overlay = document.getElementById('dialogueOverlay');
+            overlay.style.display = 'none';
+            
+            // 清理打字机效果
+            if (typewriterTimeout) {
+                clearTimeout(typewriterTimeout);
+            }
+            isTyping = false;
+        }
+
+        // 选择对话选项
+        let isProcessingDialogue = false;
+        
+        async function selectDialogueChoice(choiceId) {
+            if (isProcessingDialogue) {
+                console.log('对话选择正在处理中，忽略重复点击');
+                return;
+            }
+            
+            isProcessingDialogue = true;
+            closeDialogue();
+            
+            try {
+                const command = {
+                    type: 'dialogue_choice',
+                    choice: choiceId
+                };
+                
+                console.log('发送对话选择:', command);
+                
+                const response = await fetch(`${API_BASE}/command`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(command)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('对话选择响应:', data);
+                    handleServerResponse(data);
+                } else {
+                    console.error('对话选择请求失败:', response.status, response.statusText);
+                }
+            } catch (error) {
+                console.error('发送对话选择失败:', error);
+            } finally {
+                isProcessingDialogue = false;
+            }
+        }
+
+        // 关闭对话
+        function closeDialogue() {
+            document.getElementById('dialogueOverlay').style.display = 'none';
+        }
+
+        // 显示场景更新
+        function showSceneUpdate(data) {
+            console.log('处理场景更新:', data);
+            
+            if (data.data) {
+                // 更新位置信息
+                if (data.data.location) {
+                    gameState.currentLocation = data.data.location;
+                    document.getElementById('locationName').textContent = `🏠 ${data.data.location}`;
+                }
+                
+                // 更新描述
+                if (data.data.description) {
+                    document.getElementById('locationDescription').textContent = data.data.description;
+                }
+                
+                // 更新属性
+                if (data.data.attributes) {
+                    gameState.attributes = data.data.attributes;
+                }
+                
+                // 更新物品栏
+                if (data.data.inventory) {
+                    gameState.inventory = data.data.inventory;
+                }
+                
+                // 更新可用操作
+                if (data.data.actions) {
+                    console.log('场景更新前的操作:', gameState.availableActions);
+                    gameState.availableActions = data.data.actions;
+                    console.log('场景更新后的操作:', gameState.availableActions);
+                }
+                
+                // 立即更新显示
+                console.log('调用updateGameDisplay前的操作:', gameState.availableActions);
+                updateGameDisplay();
+                console.log('调用updateGameDisplay后的操作:', gameState.availableActions);
+            }
+        }
+
+        // 显示物品详情
+        function showItemDetail(item) {
+            let itemName, itemDescription, itemGrade;
+            
+            // 处理新的物品对象格式
+            if (typeof item === 'object' && item.name) {
+                itemName = item.name;
+                itemDescription = item.description;
+                itemGrade = item.grade;
+            } else {
+                // 向后兼容旧的字符串格式
+                itemName = item;
+                const details = getItemDetails(itemName);
+                itemDescription = details.description;
+                itemGrade = 0;
+            }
+            
+            const gradeText = getGradeText(itemGrade);
+            const icon = getItemIcon(itemName);
+            
+            showDialogue({
+                speaker: '物品详情',
+                text: `${icon} ${itemName} ${gradeText}\n\n${itemDescription}`,
+                choices: []
+            });
+        }
+
+        // 获取物品等级文本
+        function getGradeText(grade) {
+            switch(grade) {
+                case 0: return ''; // 基础版不显示等级
+                case 1: return '✨'; // 完美版
+                case 2: return '📖'; // 故事物品
+                default: return '';
+            }
+        }
+
+        // 获取物品详情
+        function getItemDetails(itemName) {
+            const items = {
+                '委托信': {
+                    description: '一封泛黄的委托信，来自苏晓。信中请求寻找三件家母的时光信物：刻有"梅"字的旧怀表、《梧桐雨》手写乐谱、育才中学的1975届集体照。'
+                },
+                '刻有梅字的旧怀表': {
+                    description: '一块精美的老式怀表，表盘上刻着"梅"字。这是周奶奶与她丈夫爱情的见证，承载着美好的回忆。'
+                },
+                '梧桐雨手写乐谱': {
+                    description: '苏先生亲手创作的乐谱，献给他深爱的周梅。每一个音符都诉说着他们的爱情故事。'
+                },
+                '育才中学1975届集体照': {
+                    description: '1975年育才中学的毕业照，照片中的周梅和苏先生青春洋溢，背面写着："愿你的歌声永远嘹亮 ——苏文"'
+                }
+            };
+            
+            return items[itemName] || { description: '一件普通的物品。' };
+        }
+
+        // 游戏菜单相关
+        function toggleGameMenu() {
+            const dropdown = document.getElementById('gameMenuDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // 显示保存游戏界面
+        function showSaveGame() {
+            document.getElementById('gameMenuDropdown').style.display = 'none';
+            document.getElementById('saveTitle').textContent = '保存游戏';
+            showSavePanel(true);
+        }
+
+        // 显示读取游戏界面
+        function showLoadGame() {
+            document.getElementById('saveTitle').textContent = '读取存档';
+            showSavePanel(false);
+        }
+
+        // 显示存档面板
+        function showSavePanel(isSaving) {
+            const overlay = document.getElementById('saveOverlay');
+            const slotsContainer = document.getElementById('saveSlots');
+            
+            slotsContainer.innerHTML = '';
+            
+            // 创建存档槽
+            for (let i = 1; i <= 5; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'save-slot';
+                
+                const saveData = getSaveData(i);
+                
+                if (saveData) {
+                    slot.innerHTML = `
+                        <div class="save-info">
+                            <div>
+                                <div>存档 ${i}</div>
+                                <div style="font-size: 0.9em; opacity: 0.8;">
+                                    位置: ${saveData.location} | 
+                                    共情值: ${saveData.attributes.empathy}
     </div>
-    
-    <!-- 背景粒子效果容器 -->
-    <div id="particles-background"></div>
-    
-    <!-- JavaScript 模块 -->
-    <script src="js/config.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/gameClient.js"></script>
-    <script src="js/uiManager.js"></script>
-    <script src="js/themeManager.js"></script>
-    <script src="js/main.js"></script>
-    
-    <!-- 可选：背景粒子效果 -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script> -->
+                            </div>
+                            <div style="font-size: 0.8em; opacity: 0.6;">
+                                ${new Date(saveData.timestamp).toLocaleString()}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    slot.classList.add('empty');
+                    slot.innerHTML = `
+                        <div class="save-info">
+                            <div>存档 ${i}</div>
+                            <div style="font-size: 0.9em; opacity: 0.6;">空存档槽</div>
+    </div>
+                    `;
+                }
+                
+                slot.onclick = () => {
+                    if (isSaving) {
+                        saveGame(i);
+                    } else {
+                        loadGame(i);
+                    }
+                };
+                
+                slotsContainer.appendChild(slot);
+            }
+            
+            overlay.style.display = 'flex';
+        }
+
+        // 保存游戏
+        function saveGame(slotId) {
+            const saveData = {
+                timestamp: Date.now(),
+                location: gameState.currentLocation,
+                attributes: { ...gameState.attributes },
+                inventory: [...gameState.inventory],
+                availableActions: [...gameState.availableActions]
+            };
+            
+            localStorage.setItem(`timeArtifacts_save_${slotId}`, JSON.stringify(saveData));
+            
+            closeSavePanel();
+            
+            // 显示保存成功提示
+            showDialogue({
+                speaker: '系统提示',
+                text: `游戏已保存到存档槽 ${slotId}`,
+                choices: []
+            });
+        }
+
+        // 读取游戏
+        async function loadGame(slotId) {
+            const saveData = getSaveData(slotId);
+            
+            if (saveData) {
+                try {
+                    // 首先通知后端重置游戏状态
+                    const command = {
+                        type: 'load_game',
+                        slotId: slotId,
+                        saveData: saveData
+                    };
+                    
+                    console.log('通知后端加载存档:', command);
+                    
+                    const response = await fetch(`${API_BASE}/command`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(command)
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('后端存档加载响应:', data);
+                        
+                        // 然后更新前端状态
+                        gameState.currentLocation = saveData.location;
+                        gameState.attributes = saveData.attributes;
+                        gameState.inventory = saveData.inventory;
+                        gameState.availableActions = saveData.availableActions;
+                        gameState.gameStarted = true;
+                        gameState.openingPlayed = true; // 标记开场序列已播放，避免重复播放
+                        
+                        closeSavePanel();
+                        
+                        // 如果在主菜单，切换到游戏界面
+                        if (document.getElementById('startScreen').style.display !== 'none') {
+                            document.getElementById('startScreen').style.display = 'none';
+                            document.getElementById('gameContainer').style.display = 'block';
+                        }
+                        
+                        // 确保开场序列界面隐藏
+                        document.getElementById('openingOverlay').style.display = 'none';
+                        
+                        updateGameDisplay();
+                    } else {
+                        console.error('后端存档加载失败:', response.status, response.statusText);
+                        // 即使后端失败，也尝试加载前端存档
+                        gameState.currentLocation = saveData.location;
+                        gameState.attributes = saveData.attributes;
+                        gameState.inventory = saveData.inventory;
+                        gameState.availableActions = saveData.availableActions;
+                        gameState.gameStarted = true;
+                        gameState.openingPlayed = true;
+                        
+                        closeSavePanel();
+                        updateGameDisplay();
+                    }
+                } catch (error) {
+                    console.error('加载存档时发生错误:', error);
+                    // 发生错误时仍然尝试加载前端存档
+                    gameState.currentLocation = saveData.location;
+                    gameState.attributes = saveData.attributes;
+                    gameState.inventory = saveData.inventory;
+                    gameState.availableActions = saveData.availableActions;
+                    gameState.gameStarted = true;
+                    gameState.openingPlayed = true;
+                    
+                    closeSavePanel();
+                    updateGameDisplay();
+                }
+                
+                showDialogue({
+                    speaker: '系统提示',
+                    text: `已读取存档槽 ${slotId} 的游戏进度`,
+                    choices: []
+                });
+            }
+        }
+
+        // 获取存档数据
+        function getSaveData(slotId) {
+            const data = localStorage.getItem(`timeArtifacts_save_${slotId}`);
+            return data ? JSON.parse(data) : null;
+        }
+
+        // 获取所有存档文件
+        function getSaveFiles() {
+            const saves = [];
+            for (let i = 1; i <= 5; i++) {
+                const saveData = getSaveData(i);
+                if (saveData) {
+                    saves.push({ slot: i, data: saveData });
+                }
+            }
+            return saves;
+        }
+
+        // 关闭存档面板
+        function closeSavePanel() {
+            document.getElementById('saveOverlay').style.display = 'none';
+        }
+
+        // 返回主菜单
+        function returnToMainMenu() {
+            document.getElementById('gameMenuDropdown').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'none';
+            document.getElementById('openingOverlay').style.display = 'none'; // 确保开场序列隐藏
+            document.getElementById('startScreen').style.display = 'flex';
+            
+            // 重置游戏状态，为下次新游戏做准备
+            gameState.gameStarted = false;
+            gameState.openingPlayed = false;
+        }
+
+        // 显示设置
+        function showSettings() {
+            showDialogue({
+                speaker: '游戏设置',
+                text: '设置功能正在开发中...',
+                choices: []
+            });
+        }
+
+        // 显示关于
+        function showAbout() {
+            showDialogue({
+                speaker: '关于游戏',
+                text: '《时光信物》\n\n一段关于记忆与时光的奇幻之旅。在这个游戏中，你将扮演一位书店继承者，帮助一位患有阿尔兹海默症的老人寻找她遗失的珍贵回忆。\n\n通过探索不同的地点，与各种角色对话，收集时光信物，你将逐渐揭开一个感人的爱情故事。',
+                choices: []
+            });
+        }
+
+        // 开场序列相关变量
+        let openingStep = 0;
+        const openingTexts = [
+            '"嘎吱"',
+            '推开"时光角落"旧书店的木门，门楣上的铜铃发出清脆的声响，这是爷爷留下的老物件。',
+            '书店里弥漫着旧纸张和油墨的特殊香气，阳光透过百叶窗在布满灰尘的空气中划出几道光柱。',
+            '书店有个不起眼的角落挂着"记忆寻回处"的木牌，下面放着几个档案盒。里面整齐分类存放着各种寻物委托：寻书、寻物、寻人...',
+            '虽不知为何书店会有寻物的委托，但这是爷爷生前留下来的系统，你也只好照做。',
+            '你正在整理书架，一本泛黄的《唐诗选》中掉出了一个牛皮纸信封，你并不惊讶——爷爷经常把重要的委托夹在他的书中，不过爷爷在前年就离世了，留下了许多还未完成的委托。'
+        ];
+
+        // 重置开场序列状态
+        function resetOpeningSequence() {
+            openingStep = 0;
+            
+            // 重置所有开场元素的状态
+            const overlay = document.getElementById('openingOverlay');
+            const textElement = document.getElementById('openingText');
+            const continuePrompt = document.getElementById('continuePrompt');
+            const soundEffect = document.getElementById('soundEffect');
+            const textContainer = document.getElementById('openingTextContainer');
+            
+            // 隐藏覆盖层
+            overlay.style.display = 'none';
+            
+            // 重置文本元素
+            textElement.innerHTML = '';
+            textElement.style.opacity = '0';
+            textElement.style.fontSize = '1.3em';
+            textElement.style.fontWeight = 'normal';
+            textElement.style.color = '#ffffff';
+            textElement.style.transition = '';
+            
+            // 重置继续提示
+            continuePrompt.style.display = 'none';
+            continuePrompt.textContent = '点击继续 ✨';
+            continuePrompt.onclick = continueOpening;
+            
+            // 重置音效
+            soundEffect.style.opacity = '0';
+            
+            // 重置文本容器
+            textContainer.innerHTML = `
+                <div class="opening-text" id="openingText">
+                    <!-- 开场文本将分段显示 -->
+    </div>
+            `;
+            
+            console.log('开场序列状态已重置');
+        }
+
+        // 播放开场序列
+        function playOpeningSequence() {
+            const overlay = document.getElementById('openingOverlay');
+            const gameContainer = document.getElementById('gameContainer');
+            
+            overlay.style.display = 'block';
+            gameContainer.style.display = 'none';
+            
+            // 创建灰尘粒子
+            createDustParticles();
+            
+            // 开始播放开场文本
+            openingStep = 0;
+            setTimeout(() => {
+                playDoorSound();
+            }, 500);
+        }
+
+        // 创建灰尘粒子效果
+        function createDustParticles() {
+            const container = document.getElementById('dustParticles');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'dust-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (8 + Math.random() * 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // 播放门铃声效果
+        function playDoorSound() {
+            const soundEffect = document.getElementById('soundEffect');
+            soundEffect.style.opacity = '1';
+            
+            setTimeout(() => {
+                soundEffect.style.opacity = '0';
+                showOpeningText();
+            }, 2000);
+        }
+
+        // 显示开场文本
+        function showOpeningText() {
+            if (openingStep >= openingTexts.length) {
+                finishOpening();
+                return;
+            }
+            
+            const textElement = document.getElementById('openingText');
+            const continuePrompt = document.getElementById('continuePrompt');
+            const currentText = openingTexts[openingStep];
+            
+            // 清空之前的文本
+            textElement.innerHTML = '';
+            textElement.style.opacity = '1';
+            
+            // 特殊处理第一个文本（门声）
+            if (openingStep === 0) {
+                textElement.style.fontSize = '2.5em';
+                textElement.style.fontWeight = 'bold';
+                textElement.style.color = '#4fc3f7';
+                typeText(textElement, currentText, 100, () => {
+                    setTimeout(() => {
+                        continuePrompt.style.display = 'block';
+                    }, 1000);
+                });
+            } else {
+                textElement.style.fontSize = '1.3em';
+                textElement.style.fontWeight = 'normal';
+                textElement.style.color = '#ffffff';
+                typeText(textElement, currentText, 50, () => {
+                    setTimeout(() => {
+                        continuePrompt.style.display = 'block';
+                    }, 1000);
+                });
+            }
+        }
+
+        // 打字机效果
+        function typeText(element, text, speed, callback) {
+            let i = 0;
+            const timer = setInterval(() => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                    if (callback) callback();
+                }
+            }, speed);
+        }
+
+        // 继续开场序列
+        function continueOpening() {
+            const continuePrompt = document.getElementById('continuePrompt');
+            continuePrompt.style.display = 'none';
+            
+            openingStep++;
+            
+            // 添加淡出效果
+            const textElement = document.getElementById('openingText');
+            textElement.style.transition = 'opacity 0.5s ease';
+            textElement.style.opacity = '0';
+            
+            setTimeout(() => {
+                showOpeningText();
+            }, 500);
+        }
+
+        // 完成开场序列
+        function finishOpening() {
+            const overlay = document.getElementById('openingOverlay');
+            const gameContainer = document.getElementById('gameContainer');
+            const textContainer = document.getElementById('openingTextContainer');
+            const continuePrompt = document.getElementById('continuePrompt');
+            
+            // 显示最终提示
+            textContainer.innerHTML = `
+                <div class="opening-text" style="opacity: 1; font-size: 1.5em; color: #4fc3f7;">
+                    📜 你发现了一封委托信...
+                </div>
+            `;
+            
+            continuePrompt.textContent = '开始探索 🚀';
+            continuePrompt.style.display = 'block';
+            continuePrompt.onclick = () => {
+                // 添加委托信到物品栏（兼容新的物品格式）
+                if (!gameState.inventory.some(item => 
+                    (typeof item === 'object' ? item.name : item) === '委托信')) {
+                    gameState.inventory.push({
+                        name: '委托信',
+                        description: '苏晓委托寻找三件信物的信件',
+                        grade: 2
+                    });
+                }
+                gameState.availableActions = ['整理书架', '查看记忆寻回处', '前往老街区'];
+                gameState.openingPlayed = true; // 标记开场序列已完成
+                
+                // 切换到游戏界面
+                overlay.style.display = 'none';
+                gameContainer.style.display = 'block';
+                
+                // 更新游戏显示
+                updateGameDisplay();
+                
+                // 显示委托信详情
+                setTimeout(() => {
+                    showItemDetail('委托信');
+                }, 1000);
+                
+                console.log('开场序列完成，游戏正式开始');
+            };
+        }
+
+        // 点击其他地方关闭菜单
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('gameMenuDropdown');
+            const toggle = document.querySelector('.menu-toggle');
+            
+            if (!menu.contains(event.target) && !toggle.contains(event.target)) {
+                menu.style.display = 'none';
+            }
+        });
+
+        // 结局动画系统
+        function showEndingAnimation(endingType, endingText) {
+            console.log('显示结局动画:', endingType);
+            
+            const overlay = document.getElementById('endingOverlay');
+            const title = document.getElementById('endingTitle');
+            const text = document.getElementById('endingText');
+            const buttons = document.getElementById('endingButtons');
+            const particles = document.getElementById('endingParticles');
+            
+            // 设置结局标题
+            let titleText = '';
+            switch(endingType) {
+                case 'perfect':
+                    titleText = '✨ 重现结局 ✨';
+                    break;
+                case 'simple':
+                    titleText = '😊 慰藉结局 😊';
+                    break;
+                default:
+                    titleText = '🎭 游戏结束 🎭';
+            }
+            
+            title.textContent = titleText;
+            text.textContent = endingText;
+            
+            // 创建粒子效果
+            createEndingParticles(particles);
+            
+            // 显示覆盖层
+            overlay.style.display = 'flex';
+            
+            // 延迟显示按钮
+            setTimeout(() => {
+                buttons.style.display = 'flex';
+            }, 5000);
+        }
+
+        function createEndingParticles(container) {
+            // 清除现有粒子
+            container.innerHTML = '';
+            
+            // 创建50个粒子
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'ending-particle';
+                
+                // 随机位置和延迟
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (8 + Math.random() * 4) + 's';
+                
+                container.appendChild(particle);
+            }
+        }
+
+        function loadGameFromEnding() {
+            console.log('从结局页面读取存档');
+            
+            // 隐藏结局覆盖层
+            document.getElementById('endingOverlay').style.display = 'none';
+            
+            // 显示开始菜单
+            document.getElementById('startScreen').style.display = 'flex';
+            document.getElementById('gameContainer').style.display = 'none';
+            
+            // 重置游戏状态
+            gameState.gameStarted = false;
+            gameState.openingPlayed = false;
+        }
+
+        // 修改现有的handleServerResponse函数来检测结局
+        const originalHandleServerResponse = handleServerResponse;
+        handleServerResponse = function(data) {
+            // 检查是否是结局响应
+            if (data.type === 'sceneUpdate' && data.data && data.data.description) {
+                const description = data.data.description;
+                
+                // 检测结局文本
+                if (description.includes('【游戏结束') || description.includes('游戏结束')) {
+                    let endingType = 'simple';
+                    
+                    if (description.includes('重现结局')) {
+                        endingType = 'perfect';
+                    } else if (description.includes('慰藉结局')) {
+                        endingType = 'simple';
+                    }
+                    
+                    // 显示结局动画
+                    setTimeout(() => {
+                        showEndingAnimation(endingType, description);
+                    }, 2000); // 2秒后显示结局动画
+                }
+            }
+            
+            // 调用原始函数
+            return originalHandleServerResponse(data);
+        };
+    </script>
 </body>
 </html>

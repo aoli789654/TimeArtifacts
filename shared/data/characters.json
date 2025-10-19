@@ -1,0 +1,313 @@
+{
+  "characters": {
+    "陈老板": {
+    "name": "陈老板",
+    "description": "钟表铺的店主，一个慈祥的老人，悠然地躺在太师椅上看报。",
+    "location": "clock_shop",
+    "dialogues": {
+      "initial": {
+        "text": "店主缓缓抬起头，上下打量着你。"你想做什么？我们这倒是有各式各样的老怀表，不知道你说的是哪一种。"",
+        "choices": [
+          {
+            "text": "询问刻有'梅'字的怀表",
+            "response": "inquiry_watch",
+            "requires": {}
+          },
+          {
+            "text": "观察店内摆设",
+            "response": "observe_shop",
+            "requires": {
+              "observation": 1
+            },
+            "rewards": {
+              "observation": 1,
+              "items": ["揉皱的进货单"]
+            }
+          }
+        ]
+      },
+      "inquiry_watch": {
+        "text": ""我是来找东西的，周奶奶的儿子托我来找一块圆形的刻有'梅'字样的老式怀表，不知道您有没有印象。"",
+        "choices": [
+          {
+            "text": "继续询问",
+            "response": "watch_story",
+            "requires": {}
+          }
+        ]
+      },
+      "observe_shop": {
+        "text": "你注意到柜台角落有个被揉皱的纸团，展开后发现是钟表铺去年的进货单，上面标注着"寄存一块刻'梅'字的怀表"。",
+        "choices": [
+          {
+            "text": "帮助店主收拾",
+            "response": "help_shopkeeper",
+            "requires": {},
+            "rewards": {
+              "action": 1
+            }
+          },
+          {
+            "text": "继续观察店内",
+            "response": "observe_more",
+            "requires": {
+              "observation": 2
+            }
+          }
+        ]
+      },
+      "help_shopkeeper": {
+        "text": "一阵忙活之后，店主明显热情了不少。你向店主解释了你的来意...",
+        "choices": [
+          {
+            "text": "询问怀表的事",
+            "response": "watch_story",
+            "requires": {}
+          }
+        ]
+      },
+      "observe_more": {
+        "text": "你发现柜台上摆放着一个相框，框中是一个青年男子手捧着一块梅花状怀表，面容灿烂。",
+        "choices": [
+          {
+            "text": "询问相框中的照片",
+            "response": "watch_story",
+            "requires": {}
+          }
+        ]
+      },
+      "watch_story": {
+        "text": "店主说道："哦，你是问这块怀表吧。"他回到后屋翻找了一番，拿着一只老旧的梅花表走了出来，轻声叹了口气："这块表是去年周姐留在这的，说要把这块表留在这，等她孙女来取。后来才知道她得了健忘症...这块表还是她丈夫在我这买的，当时还拍了张照片。"",
+        "choices": [
+          {
+            "text": "让老板修好表盘",
+            "response": "repair_watch",
+            "requires": {},
+            "rewards": {
+              "communication": 1,
+              "empathy": 2,
+              "items": ["刻有'梅'字的旧怀表", "相框"]
+            }
+          },
+          {
+            "text": "原封不动拿回",
+            "response": "take_watch",
+            "requires": {},
+            "rewards": {
+              "empathy": 1,
+              "items": ["刻有'梅'字的旧怀表"]
+            }
+          }
+        ]
+      },
+      "repair_watch": {
+        "text": ""老板，能否请您修复好这块怀表？我想让它回到当初的样子，让记忆流动起来。"忙碌了一阵，终于修复完成。店主注意到了架子上的相片："那张照片你也拿走吧，老人家也去世有些时日了，给周姐也能留个念想。"",
+        "choices": []
+      },
+      "take_watch": {
+        "text": ""或许保持原样更能体现岁月的痕迹，我直接带回去吧。"",
+        "choices": []
+      }
+    }
+  },
+  "李老师": {
+    "name": "李老师",
+    "description": "退休音乐教师，白发苍苍但精神矍铄，正在弹奏优美的钢琴曲。",
+    "location": "music_shop",
+    "dialogues": {
+      "initial": {
+        "text": "老人停下演奏，有些意外地看着你："你为什么知道这首曲子？"",
+        "choices": [
+          {
+            "text": "询问乐谱的事情",
+            "response": "ask_about_score",
+            "requires": {}
+          },
+          {
+            "text": "说对这首乐曲很熟悉",
+            "response": "familiar_music",
+            "requires": {},
+            "rewards": {
+              "communication": 1
+            }
+          },
+          {
+            "text": "欣赏乐曲",
+            "response": "appreciate_music",
+            "requires": {},
+            "rewards": {
+              "communication": 1
+            }
+          }
+        ]
+      },
+      "ask_about_score": {
+        "text": "你向老人解释了苏家的委托，来寻找《梧桐雨》的手稿。老人若有所思地点了点头...",
+        "choices": [
+          {
+            "text": "继续听老人讲述",
+            "response": "music_story",
+            "requires": {}
+          }
+        ]
+      },
+      "familiar_music": {
+        "text": ""我小时候常听到一位苏先生演奏这首曲子，当时就觉得它很美，不过后来就没再听到过了，很想知道它里面的故事。"老人温和地笑了笑："我给你讲讲便是。"",
+        "choices": [
+          {
+            "text": "继续听老人讲述",
+            "response": "music_story",
+            "requires": {}
+          }
+        ]
+      },
+      "appreciate_music": {
+        "text": "琴音渐渐消散，"这首曲子很美，里面有什么故事吗？"老人露出了温和的笑容："年轻人懂得欣赏。"",
+        "choices": [
+          {
+            "text": "继续听老人讲述",
+            "response": "music_story",
+            "requires": {}
+          }
+        ]
+      },
+      "music_story": {
+        "text": "李老师缓缓道来："这首《梧桐雨》是周梅女士的丈夫苏先生创作的。去年周女士来这里，听到我弹奏相似旋律，激动地拿出了原谱。她说希望这首曲子能被更多人听到，就把乐谱留在这里，说这是她丈夫的遗愿。"",
+        "choices": [
+          {
+            "text": "说明周奶奶的情况",
+            "response": "explain_situation",
+            "requires": {},
+            "rewards": {
+              "empathy": 1,
+              "items": ["《梧桐雨》手写乐谱"]
+            }
+          },
+          {
+            "text": "观察乐谱细节",
+            "response": "observe_score",
+            "requires": {
+              "observation": 2
+            }
+          }
+        ]
+      },
+      "explain_situation": {
+        "text": ""周奶奶得了健忘症，她的孩子特地委托我来找回丢失的乐谱。"李老师略带遗憾地看了看手中的谱子，最终还是长叹了口气："拿去吧。我和苏先生是同届音乐学院的学生，当时还是我怂恿他去追求周梅的。这间店也是我们一起开的，后来他走了，就只留了一把琴在这。"",
+        "choices": [
+          {
+            "text": "请李先生录制乐曲",
+            "response": "record_music",
+            "requires": {
+              "communication": 2
+            },
+            "rewards": {
+              "communication": 1,
+              "empathy": 2,
+              "items": ["《梧桐雨》音乐光盘"]
+            }
+          }
+        ]
+      },
+      "observe_score": {
+        "text": "你注意到乐谱最后一页有未完成的段落。李先生透露："这曲子还差最后一段，但他没来得及完成。"",
+        "choices": [
+          {
+            "text": "说明周奶奶的情况",
+            "response": "explain_situation",
+            "requires": {}
+          }
+        ]
+      },
+      "record_music": {
+        "text": ""李先生，能否请您将这曲子录下来让我带回去，也好让周女士时常听一听。""也好，也好，这可是他平生最得意的曲子了。"李先生郑重地取下那把老吉他，"对了，那张乐谱我也补齐了，你把它带走吧。"",
+        "choices": []
+      }
+    }
+  },
+  "张老师": {
+    "name": "张老师",
+    "description": "育才中学的退休教师，现在在档案馆整理资料，戴着老花镜。",
+    "location": "yucai_school",
+    "dialogues": {
+      "initial": {
+        "text": ""1975届的毕业照？这东西可有年头了啊。"张老师推了推老花镜，"你说的周梅是我们班当年的同学，人长得美，成绩也优秀，可惜后来家里出了变故便辍学了，她的集体照也一直在我这保管着。"",
+        "choices": [
+          {
+            "text": "帮忙寻找照片",
+            "response": "help_find_photo",
+            "requires": {},
+            "rewards": {
+              "empathy": 1,
+              "items": ["育才中学1975届集体照"]
+            }
+          },
+          {
+            "text": "仔细搜寻文件",
+            "response": "search_files",
+            "requires": {
+              "action": 2
+            },
+            "rewards": {
+              "empathy": 1,
+              "items": ["育才中学1975届集体照", "周奶奶的获奖证明"]
+            }
+          }
+        ]
+      },
+      "help_find_photo": {
+        "text": "你帮忙将封存已久的照片找了出来。照片中的每个人都青春洋溢，周奶奶和苏先生并排站着，满脸笑容。照片背面写着："愿你的歌声永远嘹亮 ——苏文"",
+        "choices": []
+      },
+      "search_files": {
+        "text": "你在文件袋旁边找到了一份获奖证明，上面写着周梅的名字。"这是当年周梅的诗歌作品获奖了，可惜还没等奖状下来，她便走了，只好把它留在这，等她回来拿。"",
+        "choices": []
+      }
+    }
+  },
+  "周奶奶": {
+    "name": "周奶奶",
+    "description": "一位慈祥的老人，患有阿尔兹海默症，但眼中依然闪烁着温暖的光芒。",
+    "location": "peace_road_teahouse",
+    "dialogues": {
+      "initial": {
+        "text": "周奶奶端坐在窗前，模糊的视线中透着期待。当你将三件时光信物一一递给她时，她的眼中顿时被泪水填满。",
+        "choices": [
+          {
+            "text": "交付所有时光信物",
+            "response": "deliver_all_items",
+            "requires": {
+              "items": ["刻有'梅'字的旧怀表", "《梧桐雨》手写乐谱", "育才中学1975届集体照"]
+            }
+          }
+        ]
+      },
+      "deliver_all_items": {
+        "text": "周奶奶仔细端详着这三件"遗失"的信物，露出了欣慰的笑容。她轻抚着怀表，凝视着照片，聆听着心中的旋律。这些物品唤醒了她深藏的记忆...",
+        "choices": []
+      }
+    }
+  },
+  "苏晓": {
+    "name": "苏晓",
+    "description": "周奶奶的儿子，一个孝顺的中年人，眼中满含着对母亲的关爱和担忧。",
+    "location": "peace_road_teahouse",
+    "dialogues": {
+      "initial": {
+        "text": "苏晓看着你带来的时光信物，眼中闪烁着感激的泪光。"谢谢你，真的谢谢你。这些东西对我母亲来说太重要了。"",
+        "choices": [
+          {
+            "text": "了解更多关于周奶奶的故事",
+            "response": "learn_more",
+            "requires": {}
+          }
+        ]
+      },
+      "learn_more": {
+        "text": "苏晓缓缓讲述着母亲和父亲的爱情故事，以及这些物品背后的深刻含义。每一件都承载着一段珍贵的回忆...",
+        "choices": []
+      }
+    }
+  }
+  }
+}

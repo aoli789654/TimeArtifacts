@@ -1,24 +1,50 @@
-=== Time Artifacts Game Server ===
-Version: 1.0.0
-Starting up...
-[GameEngine] Creating game engine instance
-[GameEngine] Starting game engine initialization...
-[GameEngine] Initializing subsystems...
-[GameEngine] Creating WebSocket server...
-[WebSocket] Creating WebSocket server (simplified version)
-[WebSocket] Starting WebSocket server (simulation mode), port: 8080
-[WebSocket] WebSocket server started successfully (simulation mode)![WebSocket] Server simulation loop started, port: 8080
-
-[WebSocket] NOTE: This is a simplified version for learning and testing
-[WebSocket] Real WebSocket functionality will be implemented later
-[GameEngine] WebSocket server started successfully, listening on port 8080
-[GameEngine] All subsystems initialized successfully
-[GameEngine] Game engine initialization completed
-Game engine initialized successfully
-WebSocket server started, waiting for client connections...
-Press Ctrl+C to exit
-[GameEngine] Starting main game loop
-[WebSocket] [SIMULATION] New client connection #1
-[WebSocket] [SIMULATION] Sending welcome message to client #1
-
-
+发送命令: {"type":"action","action":"整理书架"}
+(index):1506 收到响应: {
+  "error": "Game engine not available"
+}
+(index):1530 处理服务器响应，类型: undefined 数据: Object
+(index):1570 未知响应类型: undefined
+(index):1486 执行操作: 查看记忆寻回处
+(index):1494 发送命令: {"type":"action","action":"查看记忆寻回处"}
+(index):1506 收到响应: {
+  "error": "Game engine not available"
+}
+(index):1530 处理服务器响应，类型: undefined 数据: Object
+(index):1570 未知响应类型: undefined
+(index):1486 执行操作: 前往老街区
+(index):1494 发送命令: {"type":"action","action":"前往老街区"}
+(index):1506 收到响应: {
+  "error": "Game engine not available"
+}
+(index):1530 处理服务器响应，类型: undefined 数据: Object
+(index):1570 未知响应类型: undefined
+(index):1486 执行操作: 前往老街区
+(index):1494 发送命令: {"type":"action","action":"前往老街区"}
+(index):1506 收到响应: {
+  "error": "Game engine not available"
+}
+(index):1530 处理服务器响应，类型: undefined 数据: Object
+(index):1570 未知响应类型: undefined
+(index):1486 执行操作: 前往老街区
+(index):1494 发送命令: {"type":"action","action":"前往老街区"}
+(index):1471 操作正在处理中，忽略重复点击
+(index):1506 收到响应: {
+  "error": "Game engine not available"
+}
+(index):1530 处理服务器响应，类型: undefined 数据: Object
+(index):1570 未知响应类型: undefined
+(index):1486 执行操作: 整理书架
+(index):1494 发送命令: {"type":"action","action":"整理书架"}
+(index):1506 收到响应: {
+  "error": "Game engine not available"
+}
+(index):1530 处理服务器响应，类型: undefined 数据: Object
+(index):1570 未知响应类型: undefined
+(index):1486 执行操作: 前往老街区
+(index):1494 发送命令: {"type":"action","action":"前往老街区"}
+3(index):1471 操作正在处理中，忽略重复点击
+(index):1506 收到响应: {
+  "error": "Game engine not available"
+}
+(index):1530 处理服务器响应，类型: undefined 数据: Object
+(index):1570 未知响应类型: undefined
