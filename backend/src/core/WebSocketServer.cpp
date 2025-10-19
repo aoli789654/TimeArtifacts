@@ -1,13 +1,20 @@
 /**
  * WebSocketServer.cpp
  * 
- * WebSocket服务器实现（简化版本）
+ * WebSocket服务器实现
  */
 
 #include "WebSocketServer.h"
+<<<<<<< Updated upstream
+=======
+#include "SimpleWebSocketServer.h"
+#include "APIHandler.h"
+#include "../../include/core/GameEngine.h"
+#include "../../include/core/GameState.h"
+>>>>>>> Stashed changes
 #include <iostream>
-#include <chrono>
 
+<<<<<<< Updated upstream
 // 如果没有nlohmann/json，使用简单的字符串拼接
 #ifndef NLOHMANN_JSON_VERSION_MAJOR
 #define USE_SIMPLE_JSON 1
@@ -16,9 +23,18 @@
 // 构造函数 - 创建WebSocket服务器对象时调用
 WebSocketServer::WebSocketServer() : isRunning(false), port(8080) {
     std::cout << "[WebSocket] Creating WebSocket server (simplified version)" << std::endl;
+=======
+WebSocketServer::WebSocketServer() 
+    : gameEngine(nullptr), isRunning(false) {
+    std::cout << "[WebSocket] 正在创建WebSocket服务器" << std::endl;
+    
+    server = std::make_unique<SimpleWebSocketServer>();
+    apiHandler = std::make_unique<APIHandler>();
+    
+    std::cout << "[WebSocket] WebSocket服务器已创建" << std::endl;
+>>>>>>> Stashed changes
 }
 
-// 析构函数 - 销毁对象时调用
 WebSocketServer::~WebSocketServer() {
     if (isRunning) {
         stop();
@@ -26,15 +42,18 @@ WebSocketServer::~WebSocketServer() {
     std::cout << "[WebSocket] WebSocket server destroyed" << std::endl;
 }
 
-// 启动服务器
-bool WebSocketServer::start(uint16_t serverPort) {
+bool WebSocketServer::start(uint16_t port) {
     if (isRunning) {
         std::cout << "[WebSocket] WARNING: Server already running" << std::endl;
         return true;
     }
     
-    this->port = serverPort;
+    // 设置消息处理器
+    server->setMessageHandler([this](const std::string& message, int clientId) {
+        this->handleMessage(message, clientId);
+    });
     
+<<<<<<< Updated upstream
     try {
         std::cout << "[WebSocket] Starting WebSocket server (simulation mode), port: " << port << std::endl;
         
@@ -51,11 +70,18 @@ bool WebSocketServer::start(uint16_t serverPort) {
         
     } catch (const std::exception& e) {
         std::cerr << "[WebSocket] Server startup failed: " << e.what() << std::endl;
+=======
+    if (server->start(port)) {
+        isRunning = true;
+        std::cout << "[WebSocket] WebSocket服务器启动成功，端口: " << port << std::endl;
+        return true;
+    } else {
+        std::cerr << "[WebSocket] WebSocket服务器启动失败" << std::endl;
+>>>>>>> Stashed changes
         return false;
     }
 }
 
-// 停止服务器
 void WebSocketServer::stop() {
     if (!isRunning) {
         return;
@@ -63,9 +89,10 @@ void WebSocketServer::stop() {
     
     std::cout << "[WebSocket] Stopping WebSocket server..." << std::endl;
     
-    // 停止服务器
+    server->stop();
     isRunning = false;
     
+<<<<<<< Updated upstream
     // 等待服务器线程结束
     if (serverThread.joinable()) {
         serverThread.join();
@@ -78,15 +105,23 @@ void WebSocketServer::stop() {
 void WebSocketServer::setMessageHandler(std::function<void(const std::string&)> handler) {
     messageHandler = handler;
     std::cout << "[WebSocket] Message handler set" << std::endl;
+=======
+    std::cout << "[WebSocket] WebSocket服务器已停止" << std::endl;
 }
 
-// 向所有客户端发送消息（模拟版本）
+void WebSocketServer::setGameEngine(GameEngine* engine) {
+    gameEngine = engine;
+    std::cout << "[WebSocket] 游戏引擎引用已设置" << std::endl;
+>>>>>>> Stashed changes
+}
+
 void WebSocketServer::sendToAll(const std::string& message) {
     if (!isRunning) {
         std::cout << "[WebSocket] WARNING: Server not running, cannot send message" << std::endl;
         return;
     }
     
+<<<<<<< Updated upstream
     std::cout << "[WebSocket] [SIMULATION] Sending message to clients: " << message.substr(0, 100);
     if (message.length() > 100) {
         std::cout << "...";
@@ -181,4 +216,44 @@ void WebSocketServer::simulateServerLoop() {
     }
     
     std::cout << "[WebSocket] Server simulation loop ended" << std::endl;
+=======
+    server->broadcastMessage(message);
+}
+
+void WebSocketServer::sendToClient(int clientId, const std::string& message) {
+    if (!isRunning) {
+        std::cout << "[WebSocket] 警告: 服务器未运行，无法发送消息" << std::endl;
+        return;
+    }
+    
+    server->sendMessage(clientId, message);
+}
+
+void WebSocketServer::handleMessage(const std::string& message, int clientId) {
+    std::cout << "[WebSocket] 收到客户端 " << clientId << " 消息: " << message << std::endl;
+    
+    try {
+        // 使用API处理器处理消息
+        if (apiHandler) {
+            std::string response = apiHandler->handleMessage(message);
+            sendToClient(clientId, response);
+        }
+        
+        // 如果有游戏引擎，也可以直接处理游戏相关消息
+        if (gameEngine) {
+            GameState* currentState = gameEngine->getCurrentGameState();
+            if (currentState) {
+                // 可以在这里添加更复杂的消息路由逻辑
+                // 比如根据消息类型决定是否传递给当前游戏状态
+            }
+        }
+        
+    } catch (const std::exception& e) {
+        std::cerr << "[WebSocket] 处理消息时发生错误: " << e.what() << std::endl;
+        
+        // 发送错误响应
+        std::string errorResponse = R"({"type":"error","message":"服务器处理消息时发生错误"})";
+        sendToClient(clientId, errorResponse);
+    }
+>>>>>>> Stashed changes
 }

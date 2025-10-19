@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
     "locations": {
         "bookstore": {
             "id": "bookstore",
@@ -121,3 +122,137 @@
         }
     }
 }
+=======
+  "locations": {
+    "time_corner_bookstore": {
+    "name": "时光角落书店",
+    "description": "推开木门，门楣上的铜铃发出清脆的声响。书店里弥漫着旧纸张和油墨的特殊香气，阳光透过百叶窗在布满灰尘的空气中划出几道光柱。角落里挂着"记忆寻回处"的木牌，下面放着几个档案盒。",
+    "exits": {
+      "出门": "old_street"
+    },
+    "items": ["委托信"],
+    "characters": [],
+    "actions": [
+      {
+        "id": "examine_bookshelf",
+        "name": "整理书架",
+        "description": "你正在整理书架，一本泛黄的《唐诗选》中掉出了一个牛皮纸信封..."
+      },
+      {
+        "id": "examine_commission_area",
+        "name": "查看记忆寻回处",
+        "description": "这里整齐分类存放着各种寻物委托：寻书、寻物、寻人..."
+      }
+    ]
+  },
+  "old_street": {
+    "name": "老街区",
+    "description": "狭窄的巷子里，石板路被岁月磨得光滑。两旁是各种老店铺，承载着这个城市的记忆。",
+    "exits": {
+      "回书店": "time_corner_bookstore",
+      "钟表铺": "clock_shop",
+      "乐器店": "music_shop",
+      "学校": "yucai_school",
+      "茶馆": "peace_road_teahouse"
+    },
+    "items": [],
+    "characters": [],
+    "actions": [
+      {
+        "id": "look_around",
+        "name": "四处看看",
+        "description": "你环顾四周，看到了几家熟悉的老店铺。"
+      }
+    ]
+  },
+  "clock_shop": {
+    "name": "老周钟表铺",
+    "description": "招牌已经歪斜，玻璃窗上蒙着一层薄灰。店内摆放着各式各样的钟表，滴答声此起彼伏。",
+    "exits": {
+      "离开": "old_street"
+    },
+    "items": ["揉皱的进货单"],
+    "characters": ["陈老板"],
+    "actions": [
+      {
+        "id": "examine_counter",
+        "name": "观察柜台",
+        "description": "你仔细观察柜台，寻找可能的线索。",
+        "requires": {
+          "observation": 1
+        }
+      },
+      {
+        "id": "help_shopkeeper",
+        "name": "帮助店主收拾",
+        "description": "店主正准备收拾店外的修表小摊，你上前帮忙。"
+      }
+    ]
+  },
+  "music_shop": {
+    "name": "乐器店",
+    "description": "天空中阴雨绵绵，店内传来悠扬的琴声。这是一家温馨的乐器店，各种乐器整齐摆放。",
+    "exits": {
+      "离开": "old_street"
+    },
+    "items": ["老吉他"],
+    "characters": ["李老师"],
+    "actions": [
+      {
+        "id": "listen_music",
+        "name": "欣赏乐曲",
+        "description": "你静静聆听着优美的琴声，这旋律似曾相识..."
+      },
+      {
+        "id": "examine_piano",
+        "name": "观察钢琴",
+        "description": "你走近钢琴，仔细观察。"
+      }
+    ]
+  },
+  "yucai_school": {
+    "name": "育才中学",
+    "description": "一走进大门，扑面而来的便是历史的厚重感。这所学校已经经历了几十年的风霜洗礼，送走了一批又一批优秀的年轻人。",
+    "exits": {
+      "离开": "old_street"
+    },
+    "items": ["周奶奶的获奖证明"],
+    "characters": ["张老师"],
+    "actions": [
+      {
+        "id": "visit_archive",
+        "name": "前往档案馆",
+        "description": "你来到档案馆，寻找1975届的资料。"
+      },
+      {
+        "id": "help_organize",
+        "name": "帮忙整理资料",
+        "description": "你主动帮助整理封存已久的档案资料。",
+        "requires": {
+          "action": 2
+        }
+      }
+    ]
+  },
+  "peace_road_teahouse": {
+    "name": "和平路32号茶馆",
+    "description": "一间古朴的茶馆，周奶奶正端坐在窗前，苏晓陪着她默默等待着。温暖的灯光洒在她们身上。",
+    "exits": {
+      "离开": "old_street"
+    },
+    "items": [],
+    "characters": ["周奶奶", "苏晓"],
+    "actions": [
+      {
+        "id": "deliver_items",
+        "name": "交付时光信物",
+        "description": "将找到的时光信物交给周奶奶。",
+        "requires": {
+          "items": ["刻有'梅'字的旧怀表", "《梧桐雨》手写乐谱", "育才中学1975届集体照"]
+        }
+      }
+    ]
+  }
+  }
+}
+>>>>>>> Stashed changes

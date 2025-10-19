@@ -1,70 +1,37 @@
-# 编译产物
-build/
-bin/
-obj/
+# 编译输出
+backend/x64/
+backend/TimeArtifacts/x64/
+backend/out/
 *.exe
-*.dll
-*.so
-*.dylib
-
-# Visual Studio
-.vs/
-*.vcxproj.user
-*.sln.docstates
-*.sdf
-*.opensdf
-*.suo
+*.pdb
+*.obj
+*.idb
+*.tlog
 
 # 临时文件
 *.tmp
 *.temp
-*~
-*.swp
-*.swo
-
-# 日志文件
 *.log
-debug.txt
 
-# Node.js (前端)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.npm
-.yarn-integrity
-
-# 打包文件
-dist/
-*.tgz
-*.tar.gz
-
-# 编辑器配置
-.vscode/settings.json
-.idea/
-*.sublime-project
-*.sublime-workspace
-
-# 操作系统
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# 本地配置
-config.local.json
-.env.local
-
-# 测试覆盖率
-coverage/
-*.lcov
-
-# 缓存
-.cache/
-.parcel-cache/
+# IDE文件
+.vs/
+*.vcxproj.user
+*.suo
+*.sdf
 
 # vcpkg
-vcpkg_installed/
+vcpkg/
+
+# 系统文件
+Thumbs.db
+.DS_Store
+
+# 测试文件
+test_*.html
+debug_*.bat
+fix_*.bat
+*_test.*
+
+# 备份文件
+*.bak
+*.backup
